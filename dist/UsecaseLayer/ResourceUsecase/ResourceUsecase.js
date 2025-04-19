@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,173 +24,187 @@ class ResourceUsecase {
         this.AppWriteOtp = AppWriteOtp;
         this.generateEmail = generateEmail;
     }
-    async FetchResourceForm() {
-        try {
-            const fetchedResources = this.ResourceRepository.fetchResources();
-            if (!fetchedResources) {
-                return {
-                    success: false,
-                    status: 422,
-                    data: {
-                        message: "Failed to fetch resource! ,Please try later."
-                    },
-                };
-            }
-            else {
-                return {
-                    success: true,
-                    status: 200,
-                    data: fetchedResources,
-                };
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-    async AddResourceForm(title, description, fileURL, authorId, category) {
-        try {
-            const resource = { title, description, fileURL, authorId, category };
-            const addedResources = this.ResourceRepository.addResources(resource);
-            if (!addedResources) {
-                return {
-                    success: false,
-                    status: 422,
-                    data: {
-                        message: "Failed to add resource! ,Please try later."
-                    },
-                };
-            }
-            else {
-                return {
-                    success: true,
-                    status: 200,
-                    data: addedResources,
-                };
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-    async EditResourceForm(title, description, fileURL, authorId, category) {
-        try {
-            const resource = { title, description, fileURL, authorId, category };
-            const editResources = this.ResourceRepository.editResources(resource);
-            if (!editResources) {
-                return {
-                    success: false,
-                    status: 422,
-                    data: {
-                        message: "Failed to edit resource! ,Please try later."
-                    },
-                };
-            }
-            else {
-                return {
-                    success: true,
-                    status: 200,
-                    data: editResources,
-                };
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-    async DeleteResourceForm(resourceId) {
-        try {
-            const deleteResources = this.ResourceRepository.deleteResources(resourceId);
-            if (!deleteResources) {
-                return {
-                    success: false,
-                    status: 422,
-                    data: {
-                        message: "Failed to delete resource! ,Please try later."
-                    },
-                };
-            }
-            else {
-                return {
-                    success: true,
-                    status: 200,
-                    data: deleteResources,
-                };
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-    async ResourceLikeForm(resourceId, userId) {
-        try {
-            const Resources = await this.ResourceRepository.findResourcesById(resourceId);
-            if (!Resources) {
-                return {
-                    success: false,
-                    status: 400,
-                    data: {
-                        message: "Resource not found"
-                    },
-                };
-            }
-            const userObjectId = new mongoose_1.default.Types.ObjectId(userId);
-            const likeIndex = Resources.likes?.findIndex((id) => id.equals(userObjectId));
-            const dislikeIndex = Resources.dislikes?.findIndex((id) => id.equals(userObjectId));
-            if (likeIndex !== -1) {
-                Resources.like?.splice(likeIndex, 1);
-            }
-            else {
-                Resources.like?.push(userObjectId);
-                if (dislikeIndex !== -1) {
-                    Resources.dislikes?.splice(dislikeIndex, 1);
+    FetchResourceForm() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const fetchedResources = this.ResourceRepository.fetchResources();
+                if (!fetchedResources) {
+                    return {
+                        success: false,
+                        status: 422,
+                        data: {
+                            message: "Failed to fetch resource! ,Please try later."
+                        },
+                    };
+                }
+                else {
+                    return {
+                        success: true,
+                        status: 200,
+                        data: fetchedResources,
+                    };
                 }
             }
-            await Resources.save();
-            return {
-                success: true,
-                status: 200,
-                data: Resources,
-            };
-        }
-        catch (error) {
-            console.log(error);
-        }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async ResourceDislikeForm(resourceId, userId) {
-        try {
-            const Resources = await this.ResourceRepository.findResourcesById(resourceId);
-            if (!Resources) {
-                return {
-                    success: false,
-                    status: 400,
-                    data: {
-                        message: "Resource not found"
-                    },
-                };
-            }
-            const userObjectId = new mongoose_1.default.Types.ObjectId(userId);
-            const likeIndex = Resources.likes?.findIndex((id) => id.equals(userObjectId));
-            const dislikeIndex = Resources.dislikes?.findIndex((id) => id.equals(userObjectId));
-            if (dislikeIndex !== -1) {
-                Resources.dislike?.splice(dislikeIndex, 1);
-            }
-            else {
-                Resources.dislike?.push(userObjectId);
-                if (dislikeIndex !== -1) {
-                    Resources.likes?.splice(likeIndex, 1);
+    AddResourceForm(title, description, fileURL, authorId, category) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const resource = { title, description, fileURL, authorId, category };
+                const addedResources = this.ResourceRepository.addResources(resource);
+                if (!addedResources) {
+                    return {
+                        success: false,
+                        status: 422,
+                        data: {
+                            message: "Failed to add resource! ,Please try later."
+                        },
+                    };
+                }
+                else {
+                    return {
+                        success: true,
+                        status: 200,
+                        data: addedResources,
+                    };
                 }
             }
-            await Resources.save();
-            return {
-                success: true,
-                status: 200,
-                data: Resources,
-            };
-        }
-        catch (error) {
-            console.log(error);
-        }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    EditResourceForm(title, description, fileURL, authorId, category) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const resource = { title, description, fileURL, authorId, category };
+                const editResources = this.ResourceRepository.editResources(resource);
+                if (!editResources) {
+                    return {
+                        success: false,
+                        status: 422,
+                        data: {
+                            message: "Failed to edit resource! ,Please try later."
+                        },
+                    };
+                }
+                else {
+                    return {
+                        success: true,
+                        status: 200,
+                        data: editResources,
+                    };
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    DeleteResourceForm(resourceId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const deleteResources = this.ResourceRepository.deleteResources(resourceId);
+                if (!deleteResources) {
+                    return {
+                        success: false,
+                        status: 422,
+                        data: {
+                            message: "Failed to delete resource! ,Please try later."
+                        },
+                    };
+                }
+                else {
+                    return {
+                        success: true,
+                        status: 200,
+                        data: deleteResources,
+                    };
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    ResourceLikeForm(resourceId, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e;
+            try {
+                const Resources = yield this.ResourceRepository.findResourcesById(resourceId);
+                if (!Resources) {
+                    return {
+                        success: false,
+                        status: 400,
+                        data: {
+                            message: "Resource not found"
+                        },
+                    };
+                }
+                const userObjectId = new mongoose_1.default.Types.ObjectId(userId);
+                const likeIndex = (_a = Resources.likes) === null || _a === void 0 ? void 0 : _a.findIndex((id) => id.equals(userObjectId));
+                const dislikeIndex = (_b = Resources.dislikes) === null || _b === void 0 ? void 0 : _b.findIndex((id) => id.equals(userObjectId));
+                if (likeIndex !== -1) {
+                    (_c = Resources.like) === null || _c === void 0 ? void 0 : _c.splice(likeIndex, 1);
+                }
+                else {
+                    (_d = Resources.like) === null || _d === void 0 ? void 0 : _d.push(userObjectId);
+                    if (dislikeIndex !== -1) {
+                        (_e = Resources.dislikes) === null || _e === void 0 ? void 0 : _e.splice(dislikeIndex, 1);
+                    }
+                }
+                yield Resources.save();
+                return {
+                    success: true,
+                    status: 200,
+                    data: Resources,
+                };
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    ResourceDislikeForm(resourceId, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e;
+            try {
+                const Resources = yield this.ResourceRepository.findResourcesById(resourceId);
+                if (!Resources) {
+                    return {
+                        success: false,
+                        status: 400,
+                        data: {
+                            message: "Resource not found"
+                        },
+                    };
+                }
+                const userObjectId = new mongoose_1.default.Types.ObjectId(userId);
+                const likeIndex = (_a = Resources.likes) === null || _a === void 0 ? void 0 : _a.findIndex((id) => id.equals(userObjectId));
+                const dislikeIndex = (_b = Resources.dislikes) === null || _b === void 0 ? void 0 : _b.findIndex((id) => id.equals(userObjectId));
+                if (dislikeIndex !== -1) {
+                    (_c = Resources.dislike) === null || _c === void 0 ? void 0 : _c.splice(dislikeIndex, 1);
+                }
+                else {
+                    (_d = Resources.dislike) === null || _d === void 0 ? void 0 : _d.push(userObjectId);
+                    if (dislikeIndex !== -1) {
+                        (_e = Resources.likes) === null || _e === void 0 ? void 0 : _e.splice(likeIndex, 1);
+                    }
+                }
+                yield Resources.save();
+                return {
+                    success: true,
+                    status: 200,
+                    data: Resources,
+                };
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
 }
 exports.default = ResourceUsecase;

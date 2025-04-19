@@ -1,191 +1,226 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 class ThreadController {
     constructor(ThreadUsecase) {
         this.ThreadUsecase = ThreadUsecase;
     }
-    async AddThread(req, res, next) {
-        try {
-            const { title, content, authorId, tags } = req.body;
-            const addThread = await this.ThreadUsecase.AddThreadForm(title, content, authorId, tags);
-            return res.json({
-                success: addThread?.success,
-                status: addThread?.status,
-                data: addThread?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    AddThread(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { title, content, authorId, tags } = req.body;
+                const addThread = yield this.ThreadUsecase.AddThreadForm(title, content, authorId, tags);
+                return res.json({
+                    success: addThread === null || addThread === void 0 ? void 0 : addThread.success,
+                    status: addThread === null || addThread === void 0 ? void 0 : addThread.status,
+                    data: addThread === null || addThread === void 0 ? void 0 : addThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async AddComment(req, res, next) {
-        try {
-            const { userId, threadId, authorId, content } = req.body;
-            const addComment = await this.ThreadUsecase.AddCommentForm(userId, threadId, authorId, content);
-            return res.json({
-                success: addComment?.success,
-                status: addComment?.status,
-                data: addComment?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    AddComment(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { userId, threadId, authorId, content } = req.body;
+                const addComment = yield this.ThreadUsecase.AddCommentForm(userId, threadId, authorId, content);
+                return res.json({
+                    success: addComment === null || addComment === void 0 ? void 0 : addComment.success,
+                    status: addComment === null || addComment === void 0 ? void 0 : addComment.status,
+                    data: addComment === null || addComment === void 0 ? void 0 : addComment.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async EditComment(req, res, next) {
-        try {
-            const { _id, threadId, authorId, content } = req.body;
-            const editComment = await this.ThreadUsecase.EditCommentForm(_id, threadId, authorId, content);
-            return res.json({
-                success: editComment?.success,
-                status: editComment?.status,
-                data: editComment?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    EditComment(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { _id, threadId, authorId, content } = req.body;
+                const editComment = yield this.ThreadUsecase.EditCommentForm(_id, threadId, authorId, content);
+                return res.json({
+                    success: editComment === null || editComment === void 0 ? void 0 : editComment.success,
+                    status: editComment === null || editComment === void 0 ? void 0 : editComment.status,
+                    data: editComment === null || editComment === void 0 ? void 0 : editComment.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async EditThread(req, res, next) {
-        try {
-            const { _id, title, content, authorId, tags } = req.body;
-            const editThread = await this.ThreadUsecase.EditThreadForm(_id, title, content, authorId, tags);
-            return res.json({
-                success: editThread?.success,
-                status: editThread?.status,
-                data: editThread?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    EditThread(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { _id, title, content, authorId, tags } = req.body;
+                const editThread = yield this.ThreadUsecase.EditThreadForm(_id, title, content, authorId, tags);
+                return res.json({
+                    success: editThread === null || editThread === void 0 ? void 0 : editThread.success,
+                    status: editThread === null || editThread === void 0 ? void 0 : editThread.status,
+                    data: editThread === null || editThread === void 0 ? void 0 : editThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async DeleteThread(req, res, next) {
-        try {
-            const { threadId } = req.body;
-            const deleteThread = await this.ThreadUsecase.DeleteThreadForm(threadId);
-            return res.json({
-                success: deleteThread?.success,
-                status: deleteThread?.status,
-                data: deleteThread?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    DeleteThread(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { threadId } = req.body;
+                const deleteThread = yield this.ThreadUsecase.DeleteThreadForm(threadId);
+                return res.json({
+                    success: deleteThread === null || deleteThread === void 0 ? void 0 : deleteThread.success,
+                    status: deleteThread === null || deleteThread === void 0 ? void 0 : deleteThread.status,
+                    data: deleteThread === null || deleteThread === void 0 ? void 0 : deleteThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async DeleteComment(req, res, next) {
-        try {
-            const { commentId } = req.body;
-            const deleteComment = await this.ThreadUsecase.DeleteCommentForm(commentId);
-            return res.json({
-                success: deleteComment?.success,
-                status: deleteComment?.status,
-                data: deleteComment?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    DeleteComment(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { commentId } = req.body;
+                const deleteComment = yield this.ThreadUsecase.DeleteCommentForm(commentId);
+                return res.json({
+                    success: deleteComment === null || deleteComment === void 0 ? void 0 : deleteComment.success,
+                    status: deleteComment === null || deleteComment === void 0 ? void 0 : deleteComment.status,
+                    data: deleteComment === null || deleteComment === void 0 ? void 0 : deleteComment.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async CommentLikes(req, res, next) {
-        try {
-            const { commentId, userId } = req.body;
-            const likeComment = await this.ThreadUsecase.CommentLikesForm(commentId, userId);
-            return res.json({
-                success: likeComment?.success,
-                status: likeComment?.status,
-                data: likeComment?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    CommentLikes(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { commentId, userId } = req.body;
+                const likeComment = yield this.ThreadUsecase.CommentLikesForm(commentId, userId);
+                return res.json({
+                    success: likeComment === null || likeComment === void 0 ? void 0 : likeComment.success,
+                    status: likeComment === null || likeComment === void 0 ? void 0 : likeComment.status,
+                    data: likeComment === null || likeComment === void 0 ? void 0 : likeComment.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async ThreadUpvote(req, res, next) {
-        try {
-            const { threadId, likes } = req.body;
-            const likeThread = await this.ThreadUsecase.ThreadUpvoteForm(threadId, likes);
-            return res.json({
-                success: likeThread?.success,
-                status: likeThread?.status,
-                data: likeThread?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    ThreadUpvote(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { threadId, likes } = req.body;
+                const likeThread = yield this.ThreadUsecase.ThreadUpvoteForm(threadId, likes);
+                return res.json({
+                    success: likeThread === null || likeThread === void 0 ? void 0 : likeThread.success,
+                    status: likeThread === null || likeThread === void 0 ? void 0 : likeThread.status,
+                    data: likeThread === null || likeThread === void 0 ? void 0 : likeThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async CommentDislikes(req, res, next) {
-        try {
-            const { commentId, userId } = req.body;
-            const dislikeComment = await this.ThreadUsecase.CommentDislikesForm(commentId, userId);
-            return res.json({
-                success: dislikeComment?.success,
-                status: dislikeComment?.status,
-                data: dislikeComment?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    CommentDislikes(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { commentId, userId } = req.body;
+                const dislikeComment = yield this.ThreadUsecase.CommentDislikesForm(commentId, userId);
+                return res.json({
+                    success: dislikeComment === null || dislikeComment === void 0 ? void 0 : dislikeComment.success,
+                    status: dislikeComment === null || dislikeComment === void 0 ? void 0 : dislikeComment.status,
+                    data: dislikeComment === null || dislikeComment === void 0 ? void 0 : dislikeComment.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async ThreadDownvote(req, res, next) {
-        try {
-            const { threadId, userId } = req.body;
-            const dislikeThread = await this.ThreadUsecase.ThreadDownvoteForm(threadId, userId);
-            return res.json({
-                success: dislikeThread?.success,
-                status: dislikeThread?.status,
-                data: dislikeThread?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    ThreadDownvote(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { threadId, userId } = req.body;
+                const dislikeThread = yield this.ThreadUsecase.ThreadDownvoteForm(threadId, userId);
+                return res.json({
+                    success: dislikeThread === null || dislikeThread === void 0 ? void 0 : dislikeThread.success,
+                    status: dislikeThread === null || dislikeThread === void 0 ? void 0 : dislikeThread.status,
+                    data: dislikeThread === null || dislikeThread === void 0 ? void 0 : dislikeThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async ThreadShares(req, res, next) {
-        try {
-            const { threadId, shares } = req.body;
-            const shareThread = await this.ThreadUsecase.ThreadSharesForm(threadId, shares);
-            return res.json({
-                success: shareThread?.success,
-                status: shareThread?.status,
-                data: shareThread?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    ThreadShares(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { threadId, shares } = req.body;
+                const shareThread = yield this.ThreadUsecase.ThreadSharesForm(threadId, shares);
+                return res.json({
+                    success: shareThread === null || shareThread === void 0 ? void 0 : shareThread.success,
+                    status: shareThread === null || shareThread === void 0 ? void 0 : shareThread.status,
+                    data: shareThread === null || shareThread === void 0 ? void 0 : shareThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async ThreadSearch(req, res, next) {
-        try {
-            const { searchInp } = req.body;
-            //--------about topic ----
-            const shareThread = await this.ThreadUsecase.ThreadSearchForm(searchInp);
-            return res.json({
-                success: shareThread?.success,
-                status: shareThread?.status,
-                data: shareThread?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    ThreadSearch(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { searchInp } = req.body;
+                //--------about topic ----
+                const shareThread = yield this.ThreadUsecase.ThreadSearchForm(searchInp);
+                return res.json({
+                    success: shareThread === null || shareThread === void 0 ? void 0 : shareThread.success,
+                    status: shareThread === null || shareThread === void 0 ? void 0 : shareThread.status,
+                    data: shareThread === null || shareThread === void 0 ? void 0 : shareThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
-    async ThreadFilter(req, res, next) {
-        try {
-            const { filter } = req.body;
-            const shareThread = await this.ThreadUsecase.ThreadFilterForm(filter);
-            return res.json({
-                success: shareThread?.success,
-                status: shareThread?.status,
-                data: shareThread?.data,
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+    ThreadFilter(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { filter } = req.body;
+                const shareThread = yield this.ThreadUsecase.ThreadFilterForm(filter);
+                return res.json({
+                    success: shareThread === null || shareThread === void 0 ? void 0 : shareThread.success,
+                    status: shareThread === null || shareThread === void 0 ? void 0 : shareThread.status,
+                    data: shareThread === null || shareThread === void 0 ? void 0 : shareThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
     }
 }
 exports.default = ThreadController;
