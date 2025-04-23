@@ -19,11 +19,7 @@ class UserRepository {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const User = yield UserSchema_1.default.findOne({ email: email });
-                return {
-                    success: false,
-                    status: 409,
-                    data: User,
-                };
+                return User;
             }
             catch (error) {
                 console.log(error);

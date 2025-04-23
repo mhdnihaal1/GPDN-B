@@ -98,6 +98,8 @@ class UserUsecase {
           ? registrationStatus
           : "pending";
 
+        const EncryptPass =  await this.EncryptPassword.encryptPassword(password)
+
       const data = {
         fullName,
         email,
@@ -113,11 +115,12 @@ class UserUsecase {
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
         role: validRole,
-        password,
+        password:EncryptPass,
         registrationStatus: validStatus,
       };
 
       const addNewUser: IUser = { ...data };
+      
 
       const newUser = await this.UserRepository.AddUser(addNewUser);
 
@@ -193,35 +196,51 @@ class UserUsecase {
 
   async editUserForm(
     _id:string,
-    fullName: string, 
-    photo: string,
-    bio: string,
-    countryOfPractice: string,
-    medicalQualification: string,
-    yearOfGraduation: number,
-    hasFormalTrainingInPalliativeCare: boolean,
-    medicalRegistrationAuthority: string,
-    medicalRegistrationNumber: string,
-    affiliatedPalliativeAssociations: string,
-    specialInterestsInPalliativeCare: string,
-    role: string,
-    password: string,
-    registrationStatus: string
+    fullName:string,
+    email:string,
+    phoneNumber:string,
+    photo:string,
+    bio:string,
+    countryOfPractice:string,
+    medicalQualification:string,
+    yearOfGraduation:number,
+    hasFormalTrainingInPalliativeCare:boolean,
+    medicalRegistrationAuthority:string,
+    medicalRegistrationNumber:string,
+    affiliatedPalliativeAssociations:string,
+    specialInterestsInPalliativeCare:string,
+    password:string
   ) {
     try {
+      console.log(`
+        _id: ${_id}
+        fullName: ${fullName}
+        email: ${email}
+        phoneNumber: ${phoneNumber}
+        photo: ${photo}
+        bio: ${bio}
+        countryOfPractice: ${countryOfPractice}
+        medicalQualification: ${medicalQualification}
+        yearOfGraduation: ${yearOfGraduation}
+        hasFormalTrainingInPalliativeCare: ${hasFormalTrainingInPalliativeCare}
+        medicalRegistrationAuthority: ${medicalRegistrationAuthority}
+        medicalRegistrationNumber: ${medicalRegistrationNumber}
+        affiliatedPalliativeAssociations: ${affiliatedPalliativeAssociations}
+        specialInterestsInPalliativeCare: ${specialInterestsInPalliativeCare}
+        password: ${password}
+      `);
+          
+      if(password){
+        password =  await this.EncryptPassword.encryptPassword(password)
+      }
+      console.log(password)
+
      
-      const validRole = role ;
-
-      const validStatus: "pending" | "approved" | "rejected" =
-        registrationStatus === "pending" ||
-        registrationStatus === "approved" ||
-        registrationStatus === "rejected"
-          ? registrationStatus
-          : "pending";
-
       const data = {
         _id,
         fullName, 
+        email,
+        phoneNumber,
         photo,
         bio,
         countryOfPractice,
@@ -232,9 +251,7 @@ class UserUsecase {
         medicalRegistrationNumber,
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
-        role: validRole,
         password,
-        registrationStatus: validStatus,
       };
 
       const update: IUser = { ...data };
@@ -268,15 +285,16 @@ class UserUsecase {
   
   async resetORforgotPasswordForm(_id:string , password:string) {
     try {
+      const EncryptPass =  await this.EncryptPassword.encryptPassword(password)
 
-  const resetORforgotPassword = await this.UserRepository.resetORforgotPassword(_id,password);
+  const resetORforgotPassword = await this.UserRepository.resetORforgotPassword(_id,EncryptPass);
 
   if(!resetORforgotPassword){
     return {
       success: false,
       status: 400,
       data:{
-        message:"Failed to edit user! ,Please try later."
+        message:"Failed to change resetORforgot password! ,Please try later."
       },
     };
   }else{
@@ -336,10 +354,23 @@ class UserUsecase {
   async   ContactEmailForm(  name:string , email:string , phone:string , message:string ) {
     try {
 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const mail = emailRegex.test(email);
+
+      if(!mail){
+        return {
+          success: false,
+          status: 400,
+          data: {
+            message: "Enter a valid email",
+          },
+        };
+      }
+
       this.sendEmail.sendContactMail(name,email,phone,message);
       return {
-        success: false,
-        status: 400,
+        success: true,
+        status: 200,
         data: {
           message: "Contact mail sended successfully",
         },

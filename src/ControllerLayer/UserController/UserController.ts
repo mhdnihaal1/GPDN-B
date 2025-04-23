@@ -36,32 +36,6 @@ class UserController {
         registrationStatus
       } = req.body;
 
-      // if (
-        
-      
-      // ) {
-      //   return res.status(400).json({
-      //     success: false,
-      //     status:400,
-      //     message: "Missing required fields.",
-      //   });
-      // }
-      
-      const file = req.file?.buffer;
-console.log(req.file?.buffer,req.file,photo)
-if (!file) {
-  return res.status(400).json({ error: "No file uploaded" });
-}
-// const fileStream = fs.createReadStream(file.path);
-// console.log("file test :" , fileStream)
-return 
-
-// const result = await storage.createFile(
-//   'your-bucket-id',
-//   ID.unique(),
-//   fileStream,
-//   file.originalname // Pass the name explicitly
-// );
 
       const registrationForm = await this.UserUsecase.registrationForm(
         fullName,
@@ -159,6 +133,7 @@ return
 
   async EditUser(req: Request, res: Response, next: NextFunction){
     try{
+      console.log("okkkkk")
       const {
         _id,
         fullName,
@@ -172,13 +147,13 @@ return
         medicalRegistrationNumber,
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
-        role,
+        email,
         password,
-        registrationStatus,
+        phoneNumber,
       } = req.body;
   
       if (
-        _id ||
+        !_id ||
         !fullName ||
         !photo ||
         !bio ||
@@ -190,9 +165,9 @@ return
         !medicalRegistrationNumber ||
         !affiliatedPalliativeAssociations ||
         !specialInterestsInPalliativeCare ||
-        !role ||
         !password ||
-        !registrationStatus
+        !email ||
+        !phoneNumber 
       ) {
         
         return res.json({
@@ -207,6 +182,8 @@ return
       const updateUserForm = await this.UserUsecase.editUserForm(
         _id,
         fullName,
+        email,
+        phoneNumber,
         photo,
         bio,
         countryOfPractice,
@@ -217,9 +194,7 @@ return
         medicalRegistrationNumber,
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
-        role,
         password,
-        registrationStatus
       );
       
       return res.json({
@@ -279,8 +254,9 @@ return
     
     async ContactEmail(req:Request , res:Response , next: NextFunction){
       try{
-        const { name , email , phone , message } = req.body.formData;
-        console.log('am on',req.body,name)
+console.log('you are right')
+        const { name, email, phone, message } = req.body;
+      
   
         const ContactEmail = await this.UserUsecase.ContactEmailForm(  name , email , phone , message )
     

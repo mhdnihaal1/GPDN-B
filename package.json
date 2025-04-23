@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node src/Index.ts",
-   "build": "tsc",
-   "start": "node dist/Index.js",
-    "devs": "npm run build",
-    "lint": "eslint ./src --ext .ts"
-  },
+"scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+"dev": "ts-node-dev --respawn --transpile-only src/Index.ts",
+  "build": "tsc",
+  "start": "node dist/Index.js",
+  "lint": "eslint ./src --ext .ts"
+}
+,
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -13,11 +13,7 @@ class UserRepository implements UserRepo {
   async findByEmail(email: string): Promise<IUser | any> {
     try {
       const User = await UserSchema.findOne({ email: email });
-      return {
-        success: false,
-        status: 409,
-        data:User,
-      };
+      return User;
     } catch (error) {
       console.log(error);
       return error;

@@ -13,9 +13,9 @@ interface IUser {
     medicalRegistrationNumber: string;
     affiliatedPalliativeAssociations: string;
     specialInterestsInPalliativeCare: string;
-    role: string ;
+    role?: string ;
     password: string; 
-    registrationStatus: 'pending' | 'approved' | 'rejected';
+    registrationStatus?: 'pending' | 'approved' | 'rejected';
     createdAt?: Date;
     updatedAt?: Date;
   }

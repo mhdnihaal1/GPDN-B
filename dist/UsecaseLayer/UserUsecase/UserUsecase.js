@@ -59,6 +59,7 @@ class UserUsecase {
                     registrationStatus === "rejected"
                     ? registrationStatus
                     : "pending";
+                const EncryptPass = yield this.EncryptPassword.encryptPassword(password);
                 const data = {
                     fullName,
                     email,
@@ -74,7 +75,7 @@ class UserUsecase {
                     affiliatedPalliativeAssociations,
                     specialInterestsInPalliativeCare,
                     role: validRole,
-                    password,
+                    password: EncryptPass,
                     registrationStatus: validStatus,
                 };
                 const addNewUser = Object.assign({}, data);
@@ -142,18 +143,35 @@ class UserUsecase {
     //     console.log(error);
     //   }
     // }
-    editUserForm(_id, fullName, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus) {
+    editUserForm(_id, fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const validRole = role;
-                const validStatus = registrationStatus === "pending" ||
-                    registrationStatus === "approved" ||
-                    registrationStatus === "rejected"
-                    ? registrationStatus
-                    : "pending";
+                console.log(`
+        _id: ${_id}
+        fullName: ${fullName}
+        email: ${email}
+        phoneNumber: ${phoneNumber}
+        photo: ${photo}
+        bio: ${bio}
+        countryOfPractice: ${countryOfPractice}
+        medicalQualification: ${medicalQualification}
+        yearOfGraduation: ${yearOfGraduation}
+        hasFormalTrainingInPalliativeCare: ${hasFormalTrainingInPalliativeCare}
+        medicalRegistrationAuthority: ${medicalRegistrationAuthority}
+        medicalRegistrationNumber: ${medicalRegistrationNumber}
+        affiliatedPalliativeAssociations: ${affiliatedPalliativeAssociations}
+        specialInterestsInPalliativeCare: ${specialInterestsInPalliativeCare}
+        password: ${password}
+      `);
+                if (password) {
+                    password = yield this.EncryptPassword.encryptPassword(password);
+                }
+                console.log(password);
                 const data = {
                     _id,
                     fullName,
+                    email,
+                    phoneNumber,
                     photo,
                     bio,
                     countryOfPractice,
@@ -164,9 +182,7 @@ class UserUsecase {
                     medicalRegistrationNumber,
                     affiliatedPalliativeAssociations,
                     specialInterestsInPalliativeCare,
-                    role: validRole,
                     password,
-                    registrationStatus: validStatus,
                 };
                 const update = Object.assign({}, data);
                 const updatedUser = yield this.UserRepository.updateUser(update);
@@ -195,13 +211,14 @@ class UserUsecase {
     resetORforgotPasswordForm(_id, password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const resetORforgotPassword = yield this.UserRepository.resetORforgotPassword(_id, password);
+                const EncryptPass = yield this.EncryptPassword.encryptPassword(password);
+                const resetORforgotPassword = yield this.UserRepository.resetORforgotPassword(_id, EncryptPass);
                 if (!resetORforgotPassword) {
                     return {
                         success: false,
                         status: 400,
                         data: {
-                            message: "Failed to edit user! ,Please try later."
+                            message: "Failed to change resetORforgot password! ,Please try later."
                         },
                     };
                 }
@@ -259,10 +276,21 @@ class UserUsecase {
     ContactEmailForm(name, email, phone, message) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const mail = emailRegex.test(email);
+                if (!mail) {
+                    return {
+                        success: false,
+                        status: 400,
+                        data: {
+                            message: "Enter a valid email",
+                        },
+                    };
+                }
                 this.sendEmail.sendContactMail(name, email, phone, message);
                 return {
-                    success: false,
-                    status: 400,
+                    success: true,
+                    status: 200,
                     data: {
                         message: "Contact mail sended successfully",
                     },

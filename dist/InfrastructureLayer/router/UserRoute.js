@@ -37,7 +37,7 @@ route.post("/Register", (req, res, next) => {
 //   route.post("/Logout", (req, res, next) => {
 //     userController.Logout(req, res, next);
 //   });
-route.post("/EditUser", (req, res, next) => {
+route.patch("/EditUser", (req, res, next) => {
     userController.EditUser(req, res, next);
 });
 route.post("/ResetORForgotPassword", (req, res, next) => {

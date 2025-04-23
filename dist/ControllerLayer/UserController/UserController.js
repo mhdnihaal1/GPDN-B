@@ -15,31 +15,8 @@ class UserController {
     }
     Register(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
             try {
                 const { fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus } = req.body;
-                // if (
-                // ) {
-                //   return res.status(400).json({
-                //     success: false,
-                //     status:400,
-                //     message: "Missing required fields.",
-                //   });
-                // }
-                const file = (_a = req.file) === null || _a === void 0 ? void 0 : _a.buffer;
-                console.log((_b = req.file) === null || _b === void 0 ? void 0 : _b.buffer, req.file, photo);
-                if (!file) {
-                    return res.status(400).json({ error: "No file uploaded" });
-                }
-                // const fileStream = fs.createReadStream(file.path);
-                // console.log("file test :" , fileStream)
-                return;
-                // const result = await storage.createFile(
-                //   'your-bucket-id',
-                //   ID.unique(),
-                //   fileStream,
-                //   file.originalname // Pass the name explicitly
-                // );
                 const registrationForm = yield this.UserUsecase.registrationForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus);
                 return res.json({
                     success: registrationForm === null || registrationForm === void 0 ? void 0 : registrationForm.success,
@@ -105,8 +82,9 @@ class UserController {
     EditUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { _id, fullName, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus, } = req.body;
-                if (_id ||
+                console.log("okkkkk");
+                const { _id, fullName, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, email, password, phoneNumber, } = req.body;
+                if (!_id ||
                     !fullName ||
                     !photo ||
                     !bio ||
@@ -118,9 +96,9 @@ class UserController {
                     !medicalRegistrationNumber ||
                     !affiliatedPalliativeAssociations ||
                     !specialInterestsInPalliativeCare ||
-                    !role ||
                     !password ||
-                    !registrationStatus) {
+                    !email ||
+                    !phoneNumber) {
                     return res.json({
                         success: false,
                         status: 400,
@@ -129,7 +107,7 @@ class UserController {
                         }
                     });
                 }
-                const updateUserForm = yield this.UserUsecase.editUserForm(_id, fullName, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus);
+                const updateUserForm = yield this.UserUsecase.editUserForm(_id, fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, password);
                 return res.json({
                     success: updateUserForm === null || updateUserForm === void 0 ? void 0 : updateUserForm.success,
                     status: updateUserForm === null || updateUserForm === void 0 ? void 0 : updateUserForm.status,
@@ -176,8 +154,8 @@ class UserController {
     ContactEmail(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, email, phone, message } = req.body.formData;
-                console.log('am on', req.body, name);
+                console.log('you are right');
+                const { name, email, phone, message } = req.body;
                 const ContactEmail = yield this.UserUsecase.ContactEmailForm(name, email, phone, message);
                 return res.json({
                     success: ContactEmail === null || ContactEmail === void 0 ? void 0 : ContactEmail.success,
