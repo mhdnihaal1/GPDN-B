@@ -41,6 +41,10 @@ app.use(
   })
 );
 
+app.get("/api/hello", (req, res) => {
+  res.status(200).json({ message: "Server is runnings! 🟢" }); 
+});
+
 app.get("/api/server", (req, res) => {
   res.status(200).json({ message: "Server is running! 🟢" }); 
 });
