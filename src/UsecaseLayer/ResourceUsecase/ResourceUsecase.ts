@@ -40,7 +40,8 @@ class ResourceUsecase {
 
    async FetchResourceForm(){
     try{
-        const fetchedResources = this.ResourceRepository.fetchResources();
+        const fetchedResources =await this.ResourceRepository.fetchResources();
+        console.log(fetchedResources)
         if(!fetchedResources){
           return {
             success: false,
@@ -66,7 +67,7 @@ class ResourceUsecase {
    async AddResourceForm( title:string , description:string , fileURL:string , authorId:string , category:string){
     try{
       const resource = { title , description , fileURL , authorId , category}
-        const addedResources = this.ResourceRepository.addResources(resource);
+        const addedResources =await this.ResourceRepository.addResources(resource);
         if(!addedResources){
           return {
             success: false,
@@ -76,6 +77,7 @@ class ResourceUsecase {
             },
           };
         }else{
+          console.log("your are ")
           return {
             success: true,
             status: 200,
@@ -88,10 +90,10 @@ class ResourceUsecase {
    }
 
 
-   async EditResourceForm( title:string , description:string , fileURL:string , authorId:string , category:string){
+   async EditResourceForm(_id:string , title:string , description:string , fileURL:string , authorId:string , category:string){
     try{
-      const resource = { title , description , fileURL , authorId , category}
-        const editResources = this.ResourceRepository.editResources(resource);
+      const resource = {_id , title , description , fileURL , authorId , category}
+        const editResources =await this.ResourceRepository.editResources(resource);
         if(!editResources){
           return {
             success: false,
@@ -116,7 +118,7 @@ class ResourceUsecase {
 
    async DeleteResourceForm( resourceId:string ){
     try{
-        const deleteResources = this.ResourceRepository.deleteResources(resourceId);
+        const deleteResources =await this.ResourceRepository.deleteResources(resourceId);
         if(!deleteResources){
           return {
             success: false,
@@ -158,9 +160,9 @@ class ResourceUsecase {
         const dislikeIndex = Resources.dislikes?.findIndex((id:any) => id.equals(userObjectId));
     
         if (likeIndex !== -1) {
-          Resources.like?.splice(likeIndex, 1);
+          Resources.likes?.splice(likeIndex, 1);
         } else {
-          Resources.like?.push(userObjectId);
+          Resources.likes?.push(userObjectId);
           
           if (dislikeIndex !== -1) {
             Resources.dislikes?.splice(dislikeIndex, 1);
@@ -199,11 +201,11 @@ class ResourceUsecase {
       const dislikeIndex = Resources.dislikes?.findIndex((id:any) => id.equals(userObjectId));
   
       if (dislikeIndex !== -1) {
-        Resources.dislike?.splice(dislikeIndex, 1);
+        Resources.dislikes?.splice(dislikeIndex, 1);
       } else {
-        Resources.dislike?.push(userObjectId);
+        Resources.dislikes?.push(userObjectId);
         
-        if (dislikeIndex !== -1) {
+        if (likeIndex !== -1) {
           Resources.likes?.splice(likeIndex, 1);
         }
       }

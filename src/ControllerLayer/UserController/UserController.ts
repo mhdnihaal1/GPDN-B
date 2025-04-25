@@ -33,7 +33,6 @@ class UserController {
         specialInterestsInPalliativeCare,
         role,
         password,
-        registrationStatus
       } = req.body;
 
 
@@ -52,9 +51,8 @@ class UserController {
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
         role,
-        password,
-        registrationStatus
-      );
+        password
+       );
       
       return res.json({
         success: registrationForm?.success,

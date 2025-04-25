@@ -26,6 +26,7 @@ class MembersAndPalliativeController {
     try{
 
       const { searchInp } = req.body;
+      console.log(searchInp)
 
       const searchDoctors = await this.MembersAndPalliativeUseCase.SearchDoctorsForm(searchInp);
       return res.json({
@@ -85,9 +86,9 @@ class MembersAndPalliativeController {
   async editPalliativeUnit(req: Request, res: Response, next: NextFunction){
     try{
 
-      const { name , location , services , contactDetails} = req.body
+      const {_id, name , location , services , contactDetails} = req.body
 
-      const editPalliativeUnit = await this.MembersAndPalliativeUseCase.editPalliativeUnitForm(name , location , services , contactDetails)
+      const editPalliativeUnit = await this.MembersAndPalliativeUseCase.editPalliativeUnitForm(_id,name , location , services , contactDetails)
       return res.json({
         success: editPalliativeUnit?.success,
         status: editPalliativeUnit?.status,

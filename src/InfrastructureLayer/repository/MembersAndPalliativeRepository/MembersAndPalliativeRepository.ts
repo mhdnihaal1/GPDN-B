@@ -21,22 +21,24 @@ class MembersAndPalliativeRepository implements MembersAndPalliativeRepo {
     
     async SearchDoctor(searchInp:string):Promise<IUser | any>{
         try{
-           
+ 
          const searchDoctors = await UserSchema.find({
             fullName: { $regex: searchInp, $options: "i" },
           });
-          
+           
          return searchDoctors;
         }catch(error){
-         console.log(error)
+         console.log(error)   
         }
      }
 
      
      async filterDoctors(filter:string):Promise<IUser | any>{
         try{
-           
-         const filterDoctors = await UserSchema.find({fullName:filter});
+           console.log(filter)
+         const filterDoctors = await UserSchema.find({
+            fullName: { $regex: filter, $options: "i" },
+          });
          return filterDoctors;
         }catch(error){
          console.log(error)

@@ -22,6 +22,7 @@ class ResourceRepository implements ResourceRepo {
         try {
             const newResource = new ResourceSchema(resource);
             const savedResource = await newResource.save();
+            console.log(savedResource)
           return savedResource;
         } catch (error) {
           console.log(error);

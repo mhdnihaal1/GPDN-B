@@ -45,12 +45,38 @@ class AdminUsecase {
 
       this.sendEmail.sendInvitationToUser(email);
       return {
-        success: false,
-        status: 400,
+        success: true,
+        status: 200,
         data: {
           message: "email sended successfully.",
         },
       };
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  
+  async userActionStatusForm(userId:string , actionStatus:string){
+    try{
+      
+      const ActionStatus = await this.AdminRepository.userActionStatus(userId , actionStatus)
+      if(!ActionStatus){
+        return {
+          success: false,
+          status: 400,
+          data:{
+            message:"Failed to change user action! ,Please try later"
+          },
+        };
+      }else{
+        return {
+          success: true,
+          status: 200,
+          data:ActionStatus,
+        };
+      }
+
     }catch(error){
       console.log(error)
     }
@@ -71,9 +97,8 @@ class AdminUsecase {
     affiliatedPalliativeAssociations: string,
     specialInterestsInPalliativeCare: string,
     role: string,
-    password: string,
-    registrationStatus: string
-  ) {
+    password: string
+    ) {
     try {
       const ExistingUser = await this.AdminRepository.findByEmail(email);
 
@@ -108,14 +133,8 @@ class AdminUsecase {
           },
         };
       }
-      const validRole = "user" ;
+      const hashPass = await this.EncryptPassword.encryptPassword(password)
 
-      const validStatus: "pending" | "approved" | "rejected" =
-        registrationStatus === "pending" ||
-        registrationStatus === "approved" ||
-        registrationStatus === "rejected"
-          ? registrationStatus
-          : "pending";
 
       const data = {
         fullName,
@@ -131,10 +150,11 @@ class AdminUsecase {
         medicalRegistrationNumber,
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
-        role: validRole,
-        password,
-        registrationStatus: validStatus,
-      };
+        role ,
+        password:hashPass
+       };
+
+       
 
       const addNewUser: IUser = { ...data };
 
@@ -158,6 +178,7 @@ class AdminUsecase {
   
 
   async updateUserForm(
+    _id:string,
     fullName: string,
     email: string,
     phoneNumber: string,
@@ -173,20 +194,13 @@ class AdminUsecase {
     specialInterestsInPalliativeCare: string,
     role: string,
     password: string,
-    registrationStatus: string
-  ) {
+   ) {
     try {
      
-      const validRole = role ;
-
-      const validStatus: "pending" | "approved" | "rejected" =
-        registrationStatus === "pending" ||
-        registrationStatus === "approved" ||
-        registrationStatus === "rejected"
-          ? registrationStatus
-          : "pending";
-
+ 
+const hashPass = await this.EncryptPassword.encryptPassword(password)
       const data = {
+        _id,
         fullName,
         email,
         phoneNumber,
@@ -200,10 +214,9 @@ class AdminUsecase {
         medicalRegistrationNumber,
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
-        role: validRole,
-        password,
-        registrationStatus: validStatus,
-      };
+        role,
+        password:hashPass,
+       };
 
 
 
@@ -339,10 +352,10 @@ class AdminUsecase {
     }
   }
 
-  async editThreadForm(threadId:string , tags:string[] , content:string,title:string){
+  async editThreadForm(_id:string ,title:string, content:string, tags:string[] ){
     try{
-      const thread = { threadId ,title , content , tags }
-
+      const thread = { _id ,title , content , tags }
+console.log(thread)
       const editThread = await this.AdminRepository.editThread(thread)
       if(!editThread){
         return {
@@ -365,11 +378,11 @@ class AdminUsecase {
   }
 
   
-  async deleteUserCommentForm(threadId:string , userId:string ){
+  async deleteUserCommentForm(threadId:string , commentId:string ){
     try{
 
 
-      const deleteuserComment = await this.AdminRepository.deleteUserComment(threadId , userId )
+      const deleteuserComment = await this.AdminRepository.deleteUserComment(threadId , commentId )
       if(!deleteuserComment){
         return {
           success: false,
@@ -416,10 +429,8 @@ class AdminUsecase {
     }
   }
 
-  async fetchResource(){
+  async fetchResourcesForm(){
     try{
-
-
       const fetchResource = await this.AdminRepository.fetchResource()
       if(!fetchResource){
         return {
@@ -723,7 +734,7 @@ class AdminUsecase {
     try{
 
        const unit = {name , location , services , contactDetails}
-      const addPalliative = await this.AdminRepository.addPalliative(unit)
+       const addPalliative = await this.AdminRepository.addPalliative(unit)
       if(!addPalliative){
         return {
           success: false,
@@ -1014,7 +1025,8 @@ class AdminUsecase {
   async LastDayThreadForm(){
     try{
 
-      const LastDayThread = await this.AdminRepository.LastDayThread()
+      const LastDayThread = await this.AdminRepository.LastDayThread();
+      console.log(LastDayThread)
       if(!LastDayThread){
         return {
           success: false,

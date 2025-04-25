@@ -42,7 +42,7 @@ class MemberAndPalliativeUsecase {
   
   async FetchDoctorsForm(){
     try{
-        const FetchDoctor = this.MembersAndPalliativeRepository.FetchDoctors();
+        const FetchDoctor = await this.MembersAndPalliativeRepository.FetchDoctors();
         if(!FetchDoctor){
           return {
             success: false,
@@ -67,8 +67,9 @@ class MemberAndPalliativeUsecase {
 
    async SearchDoctorsForm( searchInp :string){
     try{
-        const searchDoctor = this.MembersAndPalliativeRepository.SearchDoctor(searchInp);
-        if(!searchDoctor){
+ 
+        const searchDoctor = await this.MembersAndPalliativeRepository.SearchDoctor(searchInp);
+         if(!searchDoctor){
           return {
             success: false,
             status: 400,
@@ -92,13 +93,13 @@ class MemberAndPalliativeUsecase {
    async filterDoctorsForm( filter :string){
     try{
 
-        const filterDoctor = this.MembersAndPalliativeRepository.filterDoctors(filter);
+        const filterDoctor = await this.MembersAndPalliativeRepository.filterDoctors(filter);
         if(!filterDoctor){
           return {
             success: false,
             status: 400,
             data:{
-              message:"please try again"
+              message:"Failed to filter doctor! ,please try again"
             },
           };
         }else{
@@ -166,10 +167,10 @@ class MemberAndPalliativeUsecase {
    }
 
    
-   async editPalliativeUnitForm(name:string , location:string , services:string , contactDetails:string){
+   async editPalliativeUnitForm(_id:string,name:string , location:string , services:string , contactDetails:string){
     try{
 
-     const PalliativeUnit = { name , location , services , contactDetails};
+     const PalliativeUnit = {_id, name , location , services , contactDetails};
      const editPalliativeUnit = await this.MembersAndPalliativeRepository.editPalliativeUnit(PalliativeUnit);
      if(!editPalliativeUnit){
       return {

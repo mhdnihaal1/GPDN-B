@@ -52,29 +52,31 @@ const route = express.Router();
 //  Searching and filtering discussions.   --filter remains
 //  Real-time notifications for replies & engagement (WebSockets).  -----doubt  remains
 
-
+route.get("/FetchThread", (req, res, next) => {
+  threadController.FetchThread(req, res, next);
+});
 route.post("/AddThread", (req, res, next) => {
   threadController.AddThread(req, res, next);
 });
-route.post("/EditThread", (req, res, next) => {
+route.patch("/EditThread", (req, res, next) => {
   threadController.EditThread(req, res, next);
 });
 route.post("/DeleteThread", (req, res, next) => {
   threadController.DeleteThread(req, res, next);
 });
-route.post("/ThreadUpvote", (req, res, next) => {
+route.patch("/ThreadUpvote", (req, res, next) => {
   threadController.ThreadUpvote(req, res, next);
 });
-route.post("/ThreadDownvote", (req, res, next) => {
+route.patch("/ThreadDownvote", (req, res, next) => {
   threadController.ThreadDownvote(req, res, next);
 });
-route.post("/ThreadShares", (req, res, next) => {
+route.patch("/ThreadShares", (req, res, next) => {
   threadController.ThreadShares(req, res, next);
 });
-route.post("/ThreadSearch", (req, res, next) => {
+route.get("/ThreadSearch", (req, res, next) => {
   threadController.ThreadSearch(req, res, next);
 });
-route.post("/ThreadFilter", (req, res, next) => {
+route.get("/ThreadFilter", (req, res, next) => {
   threadController.ThreadFilter(req, res, next);
 });
 
@@ -83,21 +85,21 @@ route.post("/ThreadFilter", (req, res, next) => {
 route.post("/AddComment", (req, res, next) => {
   threadController.AddComment(req, res, next);
 });
-route.post("/EditComment", (req, res, next) => {
+route.patch("/EditComment", (req, res, next) => {
   threadController.EditComment(req, res, next);
 });
 route.post("/DeleteComment", (req, res, next) => {
   threadController.DeleteComment(req, res, next);
 });
-route.post("/CommentLikes", (req, res, next) => {
+route.patch("/CommentLikes", (req, res, next) => {
   threadController.CommentLikes(req, res, next);
 });
-route.post("/CommentDislikes", (req, res, next) => {
+route.patch("/CommentDislikes", (req, res, next) => {
   threadController.CommentDislikes(req, res, next);
 });
-// route.post("/Real-time-replies", (req, res, next) => {
-//   threadController.Real-time-replies(req, res, next);
-// });
+route.patch("/Real-time-replies", (req, res, next) => {
+  threadController.RealTimeReplies(req, res, next);
+});
 
 
 

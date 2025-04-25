@@ -37,8 +37,30 @@ class ThreadUsecase {
   }
 
 
- 
-
+  async FetchThreadForm( ){
+    try{
+      
+      const fetchThread = await this.ThreadRepository.fetchThreads();
+      if(!fetchThread){
+        return {
+          success: false,
+          status: 400,
+          data:{
+            message:"Failed to add thread! ,Please try later"
+          },
+        };
+      }else{
+        return {
+          success: true,
+          status: 200,
+          data:fetchThread,
+        };
+      }        
+    }catch(error){
+        console.log(error)
+    }
+}
+  
     async AddThreadForm(title:string , content:string , authorId:string , tags:[string] ){
     try{
 
@@ -66,10 +88,10 @@ class ThreadUsecase {
 }
 
 
-async AddCommentForm(userId:string , threadId:string , authorId:string , content:string ){
+async AddCommentForm(  threadId:string , authorId:string , content:string ){
   try{
 
-    const comment = {userId , threadId , authorId ,content }
+    const comment = {  threadId , authorId ,content }
 
     const addComment = await this.ThreadRepository.addComment(comment) ;
     if(!addComment){
@@ -300,6 +322,33 @@ async CommentDislikesForm( commentId:string , userId:string ){
   }
 }
 
+
+async CommentReplyForm( commentId:string , userId:string , content:string ){
+  try{
+
+
+    const commentReply =  await this.ThreadRepository.commentReply(commentId , userId , content)
+
+     if(!commentReply){
+      return {
+        success: false,
+        status: 409,
+        data:{
+          message:"Failed to give comment reply! ,Please try later"
+        },
+      };
+    }else{
+      return {
+        success: true,
+        status: 200,
+        data:commentReply,
+      };
+    }       
+  }catch(error){
+      console.log(error)
+  }
+}
+
 async ThreadDownvoteForm( threadId:string , userId:string ){
   try{
 
@@ -335,10 +384,10 @@ async ThreadDownvoteForm( threadId:string , userId:string ){
   }
 }
 
-async ThreadSharesForm( threadId:string , shares:number ){
+async ThreadSharesForm( threadId:string ){
   try{
 
-    const threadShares = await this.ThreadRepository.ThreadShare(threadId,shares)
+    const threadShares = await this.ThreadRepository.ThreadShare(threadId)
     if(!threadShares){
       return {
         success: false,
@@ -365,7 +414,7 @@ async ThreadSearchForm( searchInp:string  ){
   try{
 
     const searchThread = await this.ThreadRepository.searchThread(searchInp)
-
+console.log(searchThread)
     if(!searchThread){
       return {
         success: false,

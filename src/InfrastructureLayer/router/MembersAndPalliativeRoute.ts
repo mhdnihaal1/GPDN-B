@@ -49,31 +49,31 @@ const route = express.Router();
 // Develop APIs to fetch, search, and filter doctor profiles. 
 // Develop APIs to fetch and manage palliative care units. 
 
-route.post("/fetchDoctors", (req, res, next) => {
+route.get("/fetchDoctors", (req, res, next) => {
   membersAndPalliativeController.fetchDoctors(req, res, next);
 });
-route.post("/searchDoctors", (req, res, next) => {
+route.get("/searchDoctors", (req, res, next) => {
   membersAndPalliativeController.searchDoctors(req, res, next);
 });
-route.post("/filterDoctors", (req, res, next) => {
+route.get("/filterDoctors", (req, res, next) => {
   membersAndPalliativeController.filterDoctors(req, res, next);
 });
 
 
-route.post("/fetchPalliativeUnit", (req, res, next) => {
+route.get("/fetchPalliativeUnit", (req, res, next) => {
   membersAndPalliativeController.fetchPalliativeUnit(req, res, next);
 });
 route.post("/addPalliativeUnit", (req, res, next) => {
   membersAndPalliativeController.addPalliativeUnit(req, res, next);
 });
-route.post("/editPalliativeUnit", (req, res, next) => {
+route.patch("/editPalliativeUnit", (req, res, next) => {
   membersAndPalliativeController.editPalliativeUnit(req, res, next);
 });
 route.post("/deletePalliativeUnit", (req, res, next) => {
   membersAndPalliativeController.deletePalliativeUnit(req, res, next);
 });
 
-route.post("/searchPalliativeUnit", (req, res, next) => {
+route.get("/searchPalliativeUnit", (req, res, next) => {
   membersAndPalliativeController.searchPalliativeUnit(req, res, next);
 });
 

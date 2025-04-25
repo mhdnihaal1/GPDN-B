@@ -11,9 +11,11 @@ const threadSchema: Schema<IThread & Document> = new Schema(
     upVote: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     downVote: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     shares: { type: Number, default: 0 },
-    comments:  [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    comments:  [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     approvalStatus: { type: Boolean, default: false }, 
-  }  
+  } ,
+  { timestamps: true }  
+
 );
 
 const Thread: Model<IThread & Document> = mongoose.model<IThread & Document>(

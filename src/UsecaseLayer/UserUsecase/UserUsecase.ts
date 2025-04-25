@@ -52,9 +52,8 @@ class UserUsecase {
     affiliatedPalliativeAssociations: string,
     specialInterestsInPalliativeCare: string,
     role: string,
-    password: string,
-    registrationStatus: string
-  ) {
+    password: string
+   ) {
     try {
       const ExistingUser = await this.UserRepository.findByEmail(email);
 
@@ -89,14 +88,7 @@ class UserUsecase {
           },
         };
       }
-      const validRole = "user" ;
-
-      const validStatus: "pending" | "approved" | "rejected" =
-        registrationStatus === "pending" ||
-        registrationStatus === "approved" ||
-        registrationStatus === "rejected"
-          ? registrationStatus
-          : "pending";
+ 
 
         const EncryptPass =  await this.EncryptPassword.encryptPassword(password)
 
@@ -114,10 +106,9 @@ class UserUsecase {
         medicalRegistrationNumber,
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
-        role: validRole,
+        role,
         password:EncryptPass,
-        registrationStatus: validStatus,
-      };
+       };
 
       const addNewUser: IUser = { ...data };
       
@@ -212,24 +203,7 @@ class UserUsecase {
     password:string
   ) {
     try {
-      console.log(`
-        _id: ${_id}
-        fullName: ${fullName}
-        email: ${email}
-        phoneNumber: ${phoneNumber}
-        photo: ${photo}
-        bio: ${bio}
-        countryOfPractice: ${countryOfPractice}
-        medicalQualification: ${medicalQualification}
-        yearOfGraduation: ${yearOfGraduation}
-        hasFormalTrainingInPalliativeCare: ${hasFormalTrainingInPalliativeCare}
-        medicalRegistrationAuthority: ${medicalRegistrationAuthority}
-        medicalRegistrationNumber: ${medicalRegistrationNumber}
-        affiliatedPalliativeAssociations: ${affiliatedPalliativeAssociations}
-        specialInterestsInPalliativeCare: ${specialInterestsInPalliativeCare}
-        password: ${password}
-      `);
-          
+   
       if(password){
         password =  await this.EncryptPassword.encryptPassword(password)
       }

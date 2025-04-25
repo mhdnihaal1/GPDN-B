@@ -9,6 +9,8 @@ import UserRoute from "../router/UserRoute";
 import ThreadRoute from "../router/ThreadRoute";
 import blogRoute from "../router/NewsAndBlogsRoute";
 import adminRoute from "../router/AdminRoute";
+import palliativeRoute from "../router/MembersAndPalliativeRoute";
+import resourceRoute from "../router/ResourceRoute";
 
 
 dotenv.config();
@@ -39,13 +41,15 @@ app.use(
   })
 );
 
-app.get("/server", (req, res) => {
+app.get("/api/server", (req, res) => {
   res.status(200).json({ message: "Server is running! 🟢" }); 
 });
 
 app.use("/api/user", UserRoute);
 app.use("/api/thread", ThreadRoute);
 app.use("/api/blog", blogRoute);
+app.use("/api/palliative", palliativeRoute);
+app.use("/api/resource", resourceRoute);
 app.use("/api/admin", adminRoute);
 
 export default app;

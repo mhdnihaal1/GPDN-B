@@ -9,6 +9,23 @@ class ThreadController {
   }
 
 
+  async FetchThread(req: Request, res: Response, next: NextFunction){
+    try{
+    
+ 
+    const fetchThread = await this.ThreadUsecase.FetchThreadForm()
+
+       return res.json({
+      success: fetchThread?.success,
+      status: fetchThread?.status,
+      data: fetchThread?.data,
+    });
+
+    }catch(error){
+      console.log(error)
+    }
+}
+  
   async AddThread(req: Request, res: Response, next: NextFunction){
         try{
         
@@ -30,9 +47,9 @@ class ThreadController {
   async AddComment(req: Request, res: Response, next: NextFunction){
     try{
 
-      const { userId ,  threadId , authorId , content } = req.body;
+      const { threadId , authorId , content } = req.body;
 
-      const addComment =await this.ThreadUsecase.AddCommentForm(userId , threadId , authorId , content )
+      const addComment =await this.ThreadUsecase.AddCommentForm( threadId , authorId , content )
       return res.json({
         success: addComment?.success,
         status: addComment?.status,
@@ -130,9 +147,9 @@ async CommentLikes(req: Request, res: Response, next: NextFunction){
 async ThreadUpvote(req: Request, res: Response, next: NextFunction){
   try{
 
-    const { threadId , likes } = req.body;
+    const { threadId , userId } = req.body;
 
-    const likeThread = await this.ThreadUsecase.ThreadUpvoteForm(threadId , likes )
+    const likeThread = await this.ThreadUsecase.ThreadUpvoteForm(threadId , userId )
 
     return res.json({
       success: likeThread?.success,
@@ -161,6 +178,24 @@ async CommentDislikes(req: Request, res: Response, next: NextFunction){
   }
 }
 
+
+async RealTimeReplies(req: Request, res: Response, next: NextFunction){
+  try{
+
+    const { commentId , userId ,  content } = req.body;
+
+    const commentReply =await this.ThreadUsecase.CommentReplyForm(commentId , userId , content)
+
+    return res.json({
+      success: commentReply?.success,
+      status: commentReply?.status,
+      data: commentReply?.data,
+    });
+  }catch(error){
+    console.log(error)
+  }
+}
+
 async ThreadDownvote(req: Request, res: Response, next: NextFunction){
   try{
 
@@ -181,9 +216,9 @@ async ThreadDownvote(req: Request, res: Response, next: NextFunction){
 async ThreadShares(req: Request, res: Response, next: NextFunction){
   try{
 
-    const { threadId , shares } = req.body;
+    const { threadId } = req.body;
 
-    const shareThread = await this.ThreadUsecase.ThreadSharesForm(threadId , shares )
+    const shareThread = await this.ThreadUsecase.ThreadSharesForm(threadId )
 
     return res.json({
       success: shareThread?.success,

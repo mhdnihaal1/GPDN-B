@@ -43,9 +43,9 @@ class ResourceController {
   async EditResource(req: Request, res: Response, next: NextFunction){
     try{
 
-      const { title , description , fileURL , authorId , category} = req.body;
+      const {_id , title , description , fileURL , authorId , category} = req.body;
 
-      const editResources =await this.ResourceUsecase.EditResourceForm( title , description , fileURL , authorId , category )
+      const editResources =await this.ResourceUsecase.EditResourceForm(_id , title , description , fileURL , authorId , category )
       return res.json({
         success: editResources?.success,
         status: editResources?.status,

@@ -8,6 +8,7 @@ import AdminRepo from "../../../UsecaseLayer/Interface/AdminRepo";
 import BlogSchema from "../../database/BlogSchema";
 import Category from "../../database/CategorySchema";
 import CategorySchema from "../../database/CategorySchema";
+import CommentSchema from "../../database/CommentSchema";
 import ResourceSchema from "../../database/ResourceSchema";
 import ThreadSchema from "../../database/ThreadSchema";
 import UnitSchema from "../../database/UnitSchema.";
@@ -27,12 +28,26 @@ class AdminRepository implements AdminRepo {
         }
       }
 
+      async userActionStatus(userId :string , actionStatus:string): Promise<IUser | any>{
+        try{
+         
+            const fetchUser = await UserSchema.findByIdAndUpdate(
+                userId,
+                { $set: { registrationStatus: actionStatus } },   
+                { new: true } 
+            );;
+            return fetchUser
+
+        }catch(error){
+            console.log(error)
+        }
+      }
 
       async AddUser(addNewUser: IUser): Promise<IUser | any> {
         try {
           const newUser = new UserSchema(addNewUser);
           const savedUser = await newUser.save();
-          return savedUser.toObject() as IUser;
+          return savedUser ;
         } catch (error) {
           console.log(error);
           return error;
@@ -43,13 +58,14 @@ class AdminRepository implements AdminRepo {
 
       async updateUser(update: IUser): Promise<IUser | null> {
         try {
-          const updatedUser = await UserSchema.findByIdAndUpdate(
-            update._id,
-            update,
-            { new: true } 
-          );
+       
+      const updatedUser = await UserSchema.findOneAndUpdate(
+       { _id: update._id },
+        update,
+        { new: true }
+       );
       
-          return updatedUser?.toObject() || null;
+          return updatedUser;
         } catch (error) {
           console.error(error);
           return null;
@@ -130,14 +146,14 @@ class AdminRepository implements AdminRepo {
 
       
 
-      async deleteUserComment( threadId:string , userId :string): Promise<IThread | any>{
+      async deleteUserComment( threadId:string , commentId :string): Promise<IThread | any>{
         try{
-    
             const deleteUserComment = await ThreadSchema.findByIdAndUpdate(
                 threadId,
-                { $pull: { comments: userId } },
+                { $pull: { comments: commentId } },
                 { new: true }
               );
+            const deletes = await CommentSchema.findByIdAndDelete(commentId)
 
           return deleteUserComment;
     
@@ -152,6 +168,7 @@ class AdminRepository implements AdminRepo {
         try{
     
             const deleteThread = await ThreadSchema.findByIdAndDelete( threadId );
+              await CommentSchema.deleteMany({ threadId:threadId });
 
           return deleteThread;
     
@@ -167,7 +184,7 @@ class AdminRepository implements AdminRepo {
             const fetchResource = await ResourceSchema.find();
 
           return fetchResource;
-    
+  
         }catch(error){
           console.log(error)
         }
@@ -191,6 +208,7 @@ class AdminRepository implements AdminRepo {
       
       async addNewsAndBlogs(NewsAndBlogs:IBlog): Promise<IBlog | any> {
         try {
+          console.log(1212)
           const newNewsAndBlogs = new BlogSchema(NewsAndBlogs);
           const savedNewsAndBlogs = await newNewsAndBlogs.save();
          return savedNewsAndBlogs;
@@ -302,6 +320,7 @@ class AdminRepository implements AdminRepo {
       async fetchPalliative(): Promise<IUnit | any>{
         try{
           const fetchPalliative = await UnitSchema.find();
+          console.log(fetchPalliative)
           return fetchPalliative;
         }catch(error){
           console.log(error)
@@ -311,9 +330,9 @@ class AdminRepository implements AdminRepo {
 
       async addPalliative(unit:IUnit): Promise<IUnit | any>{
         try{
-            const newBlog = new BlogSchema(unit);
-            const savedBlog = await newBlog.save();
-            return savedBlog;
+            const newUnit = new UnitSchema(unit);
+            const savedUnit = await newUnit.save();
+            return savedUnit;
         }catch(error){
           console.log(error)
         }
@@ -343,7 +362,7 @@ class AdminRepository implements AdminRepo {
         }
       }
 
-      async LastDayUserRegistration(): Promise<IUnit | any>{
+      async LastDayUserRegistration(): Promise<IUser | any>{
         try{
           const now = new Date();
           const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);  
@@ -351,8 +370,7 @@ class AdminRepository implements AdminRepo {
           const lastDayUserRegistration = await UserSchema.find({
              createdAt: { $gte: yesterday }
           }).sort({ createdAt: -1 }); 
-
-          return lastDayUserRegistration;
+           return lastDayUserRegistration;
 
         }catch(error){
           console.log(error)
@@ -374,12 +392,12 @@ class AdminRepository implements AdminRepo {
         }
       }
 
-      async LastMonthUserRegistration(): Promise<IUnit | any>{
+      async LastMonthUserRegistration(): Promise<IUser | any>{
         try{
           const now = new Date();
           const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);  
 
-          const lastMonthUserRegistration = await UnitSchema.find({
+          const lastMonthUserRegistration = await UserSchema.find({
             createdAt: { $gte: thirtyDaysAgo }
           }).sort({ createdAt: -1 });  
 
@@ -390,7 +408,7 @@ class AdminRepository implements AdminRepo {
         }
       }
 
-      async LastDayResource(): Promise<IUnit | any>{
+      async LastDayResource(): Promise<IResource | any>{
         try{
           const now = new Date();
           const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000); 
@@ -404,7 +422,7 @@ class AdminRepository implements AdminRepo {
         }
       }
 
-      async LastWeekResource(): Promise<IUnit | any>{
+      async LastWeekResource(): Promise<IResource | any>{
         try{
            const now = new Date();
           const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);  
@@ -419,7 +437,7 @@ class AdminRepository implements AdminRepo {
         }
       }
 
-      async LastMonthResource(): Promise<IUnit | any>{
+      async LastMonthResource(): Promise<IResource | any>{
         try{
           const now = new Date();
           const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);  
@@ -478,7 +496,7 @@ class AdminRepository implements AdminRepo {
         }
       }
 
-      async LastDayThread(): Promise<IUnit | any>{
+      async LastDayThread(): Promise<IThread | any>{
         try{
           const now = new Date();
           const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000); 
@@ -486,13 +504,14 @@ class AdminRepository implements AdminRepo {
           const lastDayThread = await ThreadSchema.find({
             createdAt: { $gte: yesterday }
          }).sort({ createdAt: -1 }); 
+         console.log(lastDayThread)
           return lastDayThread;
         }catch(error){
           console.log(error)
         }
       }
 
-      async LastWeekThread(): Promise<IUnit | any>{
+      async LastWeekThread(): Promise<IThread | any>{
         try{
           const now = new Date();
           const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);  
@@ -507,7 +526,7 @@ class AdminRepository implements AdminRepo {
         }
       }
 
-      async LastMonthThread(): Promise<IUnit | any>{
+      async LastMonthThread(): Promise<IThread | any>{
         try{
           const now = new Date();
           const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);  

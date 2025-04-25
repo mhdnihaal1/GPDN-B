@@ -9,7 +9,7 @@ import mongoose from "mongoose";
     upVote?: mongoose.Types.ObjectId[];
     downVote?: mongoose.Types.ObjectId[]; 
     shares?: number;
-    comments?: number;
+    comments?: mongoose.Types.ObjectId[];
     approvalStatus?: boolean;
     createdAt?: Date;
     updatedAt?: Date;

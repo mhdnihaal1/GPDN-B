@@ -37,7 +37,7 @@ class ThreadRepository implements ThreadRepo {
 
       await ThreadSchema.findByIdAndUpdate(
         comment.threadId,
-        { $push: { comments: comment.authorId } }, 
+        { $push: { comments: savedComment._id } }, 
         { new: true }
       );
       return savedComment;
@@ -78,7 +78,7 @@ class ThreadRepository implements ThreadRepo {
   async deleteThread(threadId: string): Promise<IThread | any> {
     try {
       const deleteComment = await CommentSchema.deleteMany({ threadId: threadId });
-      const deleteThread = await ThreadSchema.deleteOne({ _id: threadId });
+      const deleteThread = await ThreadSchema.findByIdAndDelete(threadId);
       return deleteThread;
     } catch (error) {
       console.log(error);
@@ -88,7 +88,7 @@ class ThreadRepository implements ThreadRepo {
 
   async deleteComment(commentId: string): Promise<IComment | any> {
     try {
-      const deleteComment = await CommentSchema.deleteOne({ _id: commentId });
+      const deleteComment = await CommentSchema.findByIdAndDelete( commentId );
       return deleteComment;
     } catch (error) {
       console.log(error);
@@ -119,7 +119,7 @@ class ThreadRepository implements ThreadRepo {
   }
 
 
-  async ThreadShare(threadId: string, shares: number): Promise<IThread | any> {
+  async ThreadShare(threadId: string ): Promise<IThread | any> {
     try {
       const searchThread = await ThreadSchema.findByIdAndUpdate(
         threadId,
@@ -134,14 +134,15 @@ class ThreadRepository implements ThreadRepo {
     }
   }
 
-  async searchThread(searchInp: string): Promise<IThread[] | any> {
+  async searchThread(searchInp: string): Promise<IThread | any> {
     try {
-      const searchThread = await CommentSchema.find ({
+      const searchThread = await ThreadSchema.find ({
         $or: [
           { title: { $regex: searchInp, $options: "i" } },
           { tags: { $regex: searchInp, $options: "i" } },
         ]
       });
+      console.log(searchThread)
       return searchThread;
     } catch (error) {
       console.log(error);
@@ -152,7 +153,7 @@ class ThreadRepository implements ThreadRepo {
 
   async filterlikedThread(): Promise<IThread[] | any> {
     try {
-        const sortedThreads = await ThreadSchema.find().sort({ upVote: 1 });
+        const sortedThreads = await ThreadSchema.find().sort({ upVote: -1 });
 
       return sortedThreads;
     } catch (error) {
@@ -165,7 +166,7 @@ class ThreadRepository implements ThreadRepo {
 
   async filtersharedThread(): Promise<IThread[] | any> {
     try {
-        const sortedThreads = await ThreadSchema.find().sort({ shares: 1 });
+        const sortedThreads = await ThreadSchema.find().sort({ shares: -1 });
 
       return sortedThreads;
     } catch (error) {
@@ -173,6 +174,30 @@ class ThreadRepository implements ThreadRepo {
       return error;
     }
   }
+
+  async commentReply(commentId: string, userId: string, content: string): Promise<IComment | any> {
+    try {
+      const updatedComment = await CommentSchema.findByIdAndUpdate(
+        commentId,
+        {
+          $push: {
+            reply: {
+              userId: new mongoose.Types.ObjectId(userId),
+              content: content,
+              createdAt: new Date()
+            }
+          }
+        },
+        { new: true } 
+      );
+  
+      return updatedComment;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+  
 }
 
 export default ThreadRepository;

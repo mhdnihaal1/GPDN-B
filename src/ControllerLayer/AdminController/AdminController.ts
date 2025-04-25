@@ -9,10 +9,10 @@ class AdminController {
   }
 
   
-  async adminInvitation(req: Request, res: Response, next: NextFunction){
+  async adminInvitationToUser(req: Request, res: Response, next: NextFunction){
     try{
       const { email }  = req.body;
-      const adminInvitation = await this.AdminUsecase.adminInvitationForm(email);
+       const adminInvitation = await this.AdminUsecase.adminInvitationForm(email);
       return res.json({
         success: adminInvitation?.success,
         status: adminInvitation?.status,
@@ -22,6 +22,22 @@ class AdminController {
     }catch(error){
       console.log(error)
     }
+}
+
+
+async approveORdeclineUser(req: Request, res: Response, next: NextFunction){
+  try{
+    const { userId , actionStatus }  = req.body;
+     const userActionStatus = await this.AdminUsecase.userActionStatusForm(userId , actionStatus );
+    return res.json({
+      success: userActionStatus?.success,
+      status: userActionStatus?.status,
+      data: userActionStatus?.data,
+    }); 
+   
+  }catch(error){
+    console.log(error)
+  }
 }
 
   async createUser(req: Request, res: Response, next: NextFunction){
@@ -43,8 +59,7 @@ class AdminController {
         specialInterestsInPalliativeCare,
         role,
         password,
-        registrationStatus,
-      } = req.body;
+       } = req.body;
 
       if (
         !fullName ||
@@ -61,9 +76,8 @@ class AdminController {
         !affiliatedPalliativeAssociations ||
         !specialInterestsInPalliativeCare ||
         !role ||
-        !password ||
-        !registrationStatus
-      ) {
+        !password 
+        ) {
         return res.json({
           success: false,
           status:400,
@@ -88,9 +102,8 @@ class AdminController {
         affiliatedPalliativeAssociations,
         specialInterestsInPalliativeCare,
         role,
-        password,
-        registrationStatus
-      );
+        password
+        );
       
       return res.json({
         success: createUserForm?.success,
@@ -106,6 +119,7 @@ class AdminController {
 async updateUser(req: Request, res: Response, next: NextFunction){
   try{
     const {
+      _id,
       fullName,
       email,
       phoneNumber,
@@ -121,10 +135,10 @@ async updateUser(req: Request, res: Response, next: NextFunction){
       specialInterestsInPalliativeCare,
       role,
       password,
-      registrationStatus,
-    } = req.body;
+     } = req.body;
 
     if (
+      !_id ||
       !fullName ||
       !email ||
       !phoneNumber ||
@@ -139,9 +153,8 @@ async updateUser(req: Request, res: Response, next: NextFunction){
       !affiliatedPalliativeAssociations ||
       !specialInterestsInPalliativeCare ||
       !role ||
-      !password ||
-      !registrationStatus
-    ) {
+      !password  
+     ) {
       
       return res.json({
         success: false,
@@ -153,6 +166,7 @@ async updateUser(req: Request, res: Response, next: NextFunction){
     }
 
     const updateUserForm = await this.AdminUsecase.updateUserForm(
+      _id,
       fullName,
       email,
       phoneNumber,
@@ -168,8 +182,7 @@ async updateUser(req: Request, res: Response, next: NextFunction){
       specialInterestsInPalliativeCare,
       role,
       password,
-      registrationStatus
-    );
+     );
     
     return res.json({
       success: updateUserForm?.success,
@@ -245,8 +258,8 @@ async approveORdeclineThreads(req: Request, res: Response, next: NextFunction){
 async editThreads(req: Request, res: Response, next: NextFunction){
   try{
 
-    const { threadId , title , content , tags} = req.body;
-    const editThread = await this.AdminUsecase.editThreadForm(  threadId  , title , content , tags)
+    const { _id , title , content , tags} = req.body;
+    const editThread = await this.AdminUsecase.editThreadForm(  _id  , title , content , tags)
     return res.json({
       success: editThread?.success,
       status: editThread?.status,
@@ -261,8 +274,8 @@ async editThreads(req: Request, res: Response, next: NextFunction){
 async deleteThreadComment(req: Request, res: Response, next: NextFunction){
 try{
 
-  const {threadId , userId } = req.body;
-  const deleteUserComment = await this.AdminUsecase.deleteUserCommentForm(threadId , userId)
+  const {threadId , commentId } = req.body;
+  const deleteUserComment = await this.AdminUsecase.deleteUserCommentForm(threadId , commentId)
   return res.json({
     success: deleteUserComment?.success,
     status: deleteUserComment?.status,
@@ -291,9 +304,8 @@ async deleteThreads(req: Request, res: Response, next: NextFunction){
 
 async fetchResource(req: Request, res: Response, next: NextFunction){
   try{
-    const { threadId } = req.body;
-
-    const fetchResource = await this.AdminUsecase.deleteThreadForm(threadId);
+ 
+    const fetchResource = await this.AdminUsecase.fetchResourcesForm();
     return res.json({
       success: fetchResource?.success,
       status: fetchResource?.status,
@@ -646,6 +658,7 @@ async fetchLastDayThread(req: Request, res: Response, next: NextFunction){
   try{
 
     const LastDayThread = await this.AdminUsecase.LastDayThreadForm()
+    console.log(LastDayThread)
     return res.json({
       success: LastDayThread?.success,
       status: LastDayThread?.status,
