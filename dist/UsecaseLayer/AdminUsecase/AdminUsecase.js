@@ -27,8 +27,8 @@ class AdminUsecase {
             try {
                 this.sendEmail.sendInvitationToUser(email);
                 return {
-                    success: false,
-                    status: 400,
+                    success: true,
+                    status: 200,
                     data: {
                         message: "email sended successfully.",
                     },
@@ -39,7 +39,33 @@ class AdminUsecase {
             }
         });
     }
-    createUserForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus) {
+    userActionStatusForm(userId, actionStatus) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const ActionStatus = yield this.AdminRepository.userActionStatus(userId, actionStatus);
+                if (!ActionStatus) {
+                    return {
+                        success: false,
+                        status: 400,
+                        data: {
+                            message: "Failed to change user action! ,Please try later"
+                        },
+                    };
+                }
+                else {
+                    return {
+                        success: true,
+                        status: 200,
+                        data: ActionStatus,
+                    };
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    createUserForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const ExistingUser = yield this.AdminRepository.findByEmail(email);
@@ -72,12 +98,7 @@ class AdminUsecase {
                         },
                     };
                 }
-                const validRole = "user";
-                const validStatus = registrationStatus === "pending" ||
-                    registrationStatus === "approved" ||
-                    registrationStatus === "rejected"
-                    ? registrationStatus
-                    : "pending";
+                const hashPass = yield this.EncryptPassword.encryptPassword(password);
                 const data = {
                     fullName,
                     email,
@@ -92,9 +113,8 @@ class AdminUsecase {
                     medicalRegistrationNumber,
                     affiliatedPalliativeAssociations,
                     specialInterestsInPalliativeCare,
-                    role: validRole,
-                    password,
-                    registrationStatus: validStatus,
+                    role,
+                    password: hashPass
                 };
                 const addNewUser = Object.assign({}, data);
                 const newUser = yield this.AdminRepository.AddUser(addNewUser);
@@ -112,16 +132,12 @@ class AdminUsecase {
             }
         });
     }
-    updateUserForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus) {
+    updateUserForm(_id, fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const validRole = role;
-                const validStatus = registrationStatus === "pending" ||
-                    registrationStatus === "approved" ||
-                    registrationStatus === "rejected"
-                    ? registrationStatus
-                    : "pending";
+                const hashPass = yield this.EncryptPassword.encryptPassword(password);
                 const data = {
+                    _id,
                     fullName,
                     email,
                     phoneNumber,
@@ -135,9 +151,8 @@ class AdminUsecase {
                     medicalRegistrationNumber,
                     affiliatedPalliativeAssociations,
                     specialInterestsInPalliativeCare,
-                    role: validRole,
-                    password,
-                    registrationStatus: validStatus,
+                    role,
+                    password: hashPass,
                 };
                 const update = Object.assign({}, data);
                 const updatedUser = yield this.AdminRepository.updateUser(update);
@@ -270,10 +285,11 @@ class AdminUsecase {
             }
         });
     }
-    editThreadForm(threadId, tags, content, title) {
+    editThreadForm(_id, title, content, tags) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const thread = { threadId, title, content, tags };
+                const thread = { _id, title, content, tags };
+                console.log(thread);
                 const editThread = yield this.AdminRepository.editThread(thread);
                 if (!editThread) {
                     return {
@@ -297,10 +313,10 @@ class AdminUsecase {
             }
         });
     }
-    deleteUserCommentForm(threadId, userId) {
+    deleteUserCommentForm(threadId, commentId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const deleteuserComment = yield this.AdminRepository.deleteUserComment(threadId, userId);
+                const deleteuserComment = yield this.AdminRepository.deleteUserComment(threadId, commentId);
                 if (!deleteuserComment) {
                     return {
                         success: false,
@@ -349,7 +365,7 @@ class AdminUsecase {
             }
         });
     }
-    fetchResource() {
+    fetchResourcesForm() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const fetchResource = yield this.AdminRepository.fetchResource();
@@ -988,6 +1004,7 @@ class AdminUsecase {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const LastDayThread = yield this.AdminRepository.LastDayThread();
+                console.log(LastDayThread);
                 if (!LastDayThread) {
                     return {
                         success: false,

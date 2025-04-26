@@ -22,6 +22,32 @@ class ThreadUsecase {
         this.AppWriteOtp = AppWriteOtp;
         this.generateEmail = generateEmail;
     }
+    FetchThreadForm() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const fetchThread = yield this.ThreadRepository.fetchThreads();
+                if (!fetchThread) {
+                    return {
+                        success: false,
+                        status: 400,
+                        data: {
+                            message: "Failed to add thread! ,Please try later"
+                        },
+                    };
+                }
+                else {
+                    return {
+                        success: true,
+                        status: 200,
+                        data: fetchThread,
+                    };
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
     AddThreadForm(title, content, authorId, tags) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -49,10 +75,10 @@ class ThreadUsecase {
             }
         });
     }
-    AddCommentForm(userId, threadId, authorId, content) {
+    AddCommentForm(threadId, authorId, content) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const comment = { userId, threadId, authorId, content };
+                const comment = { threadId, authorId, content };
                 const addComment = yield this.ThreadRepository.addComment(comment);
                 if (!addComment) {
                     return {
@@ -278,6 +304,32 @@ class ThreadUsecase {
             }
         });
     }
+    CommentReplyForm(commentId, userId, content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const commentReply = yield this.ThreadRepository.commentReply(commentId, userId, content);
+                if (!commentReply) {
+                    return {
+                        success: false,
+                        status: 409,
+                        data: {
+                            message: "Failed to give comment reply! ,Please try later"
+                        },
+                    };
+                }
+                else {
+                    return {
+                        success: true,
+                        status: 200,
+                        data: commentReply,
+                    };
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
     ThreadDownvoteForm(threadId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c, _d, _e;
@@ -310,10 +362,10 @@ class ThreadUsecase {
             }
         });
     }
-    ThreadSharesForm(threadId, shares) {
+    ThreadSharesForm(threadId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const threadShares = yield this.ThreadRepository.ThreadShare(threadId, shares);
+                const threadShares = yield this.ThreadRepository.ThreadShare(threadId);
                 if (!threadShares) {
                     return {
                         success: false,
@@ -340,6 +392,7 @@ class ThreadUsecase {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const searchThread = yield this.ThreadRepository.searchThread(searchInp);
+                console.log(searchThread);
                 if (!searchThread) {
                     return {
                         success: false,

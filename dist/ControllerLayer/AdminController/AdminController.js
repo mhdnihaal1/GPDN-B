@@ -13,7 +13,7 @@ class AdminController {
     constructor(AdminUsecase) {
         this.AdminUsecase = AdminUsecase;
     }
-    adminInvitation(req, res, next) {
+    adminInvitationToUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email } = req.body;
@@ -29,10 +29,26 @@ class AdminController {
             }
         });
     }
+    approveORdeclineUser(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { userId, actionStatus } = req.body;
+                const userActionStatus = yield this.AdminUsecase.userActionStatusForm(userId, actionStatus);
+                return res.json({
+                    success: userActionStatus === null || userActionStatus === void 0 ? void 0 : userActionStatus.success,
+                    status: userActionStatus === null || userActionStatus === void 0 ? void 0 : userActionStatus.status,
+                    data: userActionStatus === null || userActionStatus === void 0 ? void 0 : userActionStatus.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
     createUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus, } = req.body;
+                const { fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, } = req.body;
                 if (!fullName ||
                     !email ||
                     !phoneNumber ||
@@ -47,8 +63,7 @@ class AdminController {
                     !affiliatedPalliativeAssociations ||
                     !specialInterestsInPalliativeCare ||
                     !role ||
-                    !password ||
-                    !registrationStatus) {
+                    !password) {
                     return res.json({
                         success: false,
                         status: 400,
@@ -57,7 +72,7 @@ class AdminController {
                         }
                     });
                 }
-                const createUserForm = yield this.AdminUsecase.createUserForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus);
+                const createUserForm = yield this.AdminUsecase.createUserForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password);
                 return res.json({
                     success: createUserForm === null || createUserForm === void 0 ? void 0 : createUserForm.success,
                     status: createUserForm === null || createUserForm === void 0 ? void 0 : createUserForm.status,
@@ -72,8 +87,9 @@ class AdminController {
     updateUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus, } = req.body;
-                if (!fullName ||
+                const { _id, fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, } = req.body;
+                if (!_id ||
+                    !fullName ||
                     !email ||
                     !phoneNumber ||
                     !photo ||
@@ -87,8 +103,7 @@ class AdminController {
                     !affiliatedPalliativeAssociations ||
                     !specialInterestsInPalliativeCare ||
                     !role ||
-                    !password ||
-                    !registrationStatus) {
+                    !password) {
                     return res.json({
                         success: false,
                         status: 400,
@@ -97,7 +112,7 @@ class AdminController {
                         }
                     });
                 }
-                const updateUserForm = yield this.AdminUsecase.updateUserForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus);
+                const updateUserForm = yield this.AdminUsecase.updateUserForm(_id, fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password);
                 return res.json({
                     success: updateUserForm === null || updateUserForm === void 0 ? void 0 : updateUserForm.success,
                     status: updateUserForm === null || updateUserForm === void 0 ? void 0 : updateUserForm.status,
@@ -174,8 +189,8 @@ class AdminController {
     editThreads(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { threadId, title, content, tags } = req.body;
-                const editThread = yield this.AdminUsecase.editThreadForm(threadId, title, content, tags);
+                const { _id, title, content, tags } = req.body;
+                const editThread = yield this.AdminUsecase.editThreadForm(_id, title, content, tags);
                 return res.json({
                     success: editThread === null || editThread === void 0 ? void 0 : editThread.success,
                     status: editThread === null || editThread === void 0 ? void 0 : editThread.status,
@@ -190,8 +205,8 @@ class AdminController {
     deleteThreadComment(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { threadId, userId } = req.body;
-                const deleteUserComment = yield this.AdminUsecase.deleteUserCommentForm(threadId, userId);
+                const { threadId, commentId } = req.body;
+                const deleteUserComment = yield this.AdminUsecase.deleteUserCommentForm(threadId, commentId);
                 return res.json({
                     success: deleteUserComment === null || deleteUserComment === void 0 ? void 0 : deleteUserComment.success,
                     status: deleteUserComment === null || deleteUserComment === void 0 ? void 0 : deleteUserComment.status,
@@ -222,8 +237,7 @@ class AdminController {
     fetchResource(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { threadId } = req.body;
-                const fetchResource = yield this.AdminUsecase.deleteThreadForm(threadId);
+                const fetchResource = yield this.AdminUsecase.fetchResourcesForm();
                 return res.json({
                     success: fetchResource === null || fetchResource === void 0 ? void 0 : fetchResource.success,
                     status: fetchResource === null || fetchResource === void 0 ? void 0 : fetchResource.status,
@@ -595,6 +609,7 @@ class AdminController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const LastDayThread = yield this.AdminUsecase.LastDayThreadForm();
+                console.log(LastDayThread);
                 return res.json({
                     success: LastDayThread === null || LastDayThread === void 0 ? void 0 : LastDayThread.success,
                     status: LastDayThread === null || LastDayThread === void 0 ? void 0 : LastDayThread.status,

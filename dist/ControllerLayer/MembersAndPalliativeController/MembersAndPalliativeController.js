@@ -32,6 +32,7 @@ class MembersAndPalliativeController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { searchInp } = req.body;
+                console.log(searchInp);
                 const searchDoctors = yield this.MembersAndPalliativeUseCase.SearchDoctorsForm(searchInp);
                 return res.json({
                     success: searchDoctors === null || searchDoctors === void 0 ? void 0 : searchDoctors.success,
@@ -94,8 +95,8 @@ class MembersAndPalliativeController {
     editPalliativeUnit(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, location, services, contactDetails } = req.body;
-                const editPalliativeUnit = yield this.MembersAndPalliativeUseCase.editPalliativeUnitForm(name, location, services, contactDetails);
+                const { _id, name, location, services, contactDetails } = req.body;
+                const editPalliativeUnit = yield this.MembersAndPalliativeUseCase.editPalliativeUnitForm(_id, name, location, services, contactDetails);
                 return res.json({
                     success: editPalliativeUnit === null || editPalliativeUnit === void 0 ? void 0 : editPalliativeUnit.success,
                     status: editPalliativeUnit === null || editPalliativeUnit === void 0 ? void 0 : editPalliativeUnit.status,

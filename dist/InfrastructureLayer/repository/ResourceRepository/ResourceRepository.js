@@ -31,6 +31,7 @@ class ResourceRepository {
             try {
                 const newResource = new ResourceSchema_1.default(resource);
                 const savedResource = yield newResource.save();
+                console.log(savedResource);
                 return savedResource;
             }
             catch (error) {

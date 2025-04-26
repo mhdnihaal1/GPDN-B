@@ -27,7 +27,8 @@ class ResourceUsecase {
     FetchResourceForm() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const fetchedResources = this.ResourceRepository.fetchResources();
+                const fetchedResources = yield this.ResourceRepository.fetchResources();
+                console.log(fetchedResources);
                 if (!fetchedResources) {
                     return {
                         success: false,
@@ -54,7 +55,7 @@ class ResourceUsecase {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const resource = { title, description, fileURL, authorId, category };
-                const addedResources = this.ResourceRepository.addResources(resource);
+                const addedResources = yield this.ResourceRepository.addResources(resource);
                 if (!addedResources) {
                     return {
                         success: false,
@@ -65,6 +66,7 @@ class ResourceUsecase {
                     };
                 }
                 else {
+                    console.log("your are ");
                     return {
                         success: true,
                         status: 200,
@@ -77,11 +79,11 @@ class ResourceUsecase {
             }
         });
     }
-    EditResourceForm(title, description, fileURL, authorId, category) {
+    EditResourceForm(_id, title, description, fileURL, authorId, category) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const resource = { title, description, fileURL, authorId, category };
-                const editResources = this.ResourceRepository.editResources(resource);
+                const resource = { _id, title, description, fileURL, authorId, category };
+                const editResources = yield this.ResourceRepository.editResources(resource);
                 if (!editResources) {
                     return {
                         success: false,
@@ -107,7 +109,7 @@ class ResourceUsecase {
     DeleteResourceForm(resourceId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const deleteResources = this.ResourceRepository.deleteResources(resourceId);
+                const deleteResources = yield this.ResourceRepository.deleteResources(resourceId);
                 if (!deleteResources) {
                     return {
                         success: false,
@@ -148,10 +150,10 @@ class ResourceUsecase {
                 const likeIndex = (_a = Resources.likes) === null || _a === void 0 ? void 0 : _a.findIndex((id) => id.equals(userObjectId));
                 const dislikeIndex = (_b = Resources.dislikes) === null || _b === void 0 ? void 0 : _b.findIndex((id) => id.equals(userObjectId));
                 if (likeIndex !== -1) {
-                    (_c = Resources.like) === null || _c === void 0 ? void 0 : _c.splice(likeIndex, 1);
+                    (_c = Resources.likes) === null || _c === void 0 ? void 0 : _c.splice(likeIndex, 1);
                 }
                 else {
-                    (_d = Resources.like) === null || _d === void 0 ? void 0 : _d.push(userObjectId);
+                    (_d = Resources.likes) === null || _d === void 0 ? void 0 : _d.push(userObjectId);
                     if (dislikeIndex !== -1) {
                         (_e = Resources.dislikes) === null || _e === void 0 ? void 0 : _e.splice(dislikeIndex, 1);
                     }
@@ -186,11 +188,11 @@ class ResourceUsecase {
                 const likeIndex = (_a = Resources.likes) === null || _a === void 0 ? void 0 : _a.findIndex((id) => id.equals(userObjectId));
                 const dislikeIndex = (_b = Resources.dislikes) === null || _b === void 0 ? void 0 : _b.findIndex((id) => id.equals(userObjectId));
                 if (dislikeIndex !== -1) {
-                    (_c = Resources.dislike) === null || _c === void 0 ? void 0 : _c.splice(dislikeIndex, 1);
+                    (_c = Resources.dislikes) === null || _c === void 0 ? void 0 : _c.splice(dislikeIndex, 1);
                 }
                 else {
-                    (_d = Resources.dislike) === null || _d === void 0 ? void 0 : _d.push(userObjectId);
-                    if (dislikeIndex !== -1) {
+                    (_d = Resources.dislikes) === null || _d === void 0 ? void 0 : _d.push(userObjectId);
+                    if (likeIndex !== -1) {
                         (_e = Resources.likes) === null || _e === void 0 ? void 0 : _e.splice(likeIndex, 1);
                     }
                 }

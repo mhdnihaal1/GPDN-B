@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const BlogSchema_1 = __importDefault(require("../../database/BlogSchema"));
 const CategorySchema_1 = __importDefault(require("../../database/CategorySchema"));
+const CommentSchema_1 = __importDefault(require("../../database/CommentSchema"));
 const ResourceSchema_1 = __importDefault(require("../../database/ResourceSchema"));
 const ThreadSchema_1 = __importDefault(require("../../database/ThreadSchema"));
 const UnitSchema_1 = __importDefault(require("../../database/UnitSchema."));
@@ -31,12 +32,24 @@ class AdminRepository {
             }
         });
     }
+    userActionStatus(userId, actionStatus) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const fetchUser = yield UserSchema_1.default.findByIdAndUpdate(userId, { $set: { registrationStatus: actionStatus } }, { new: true });
+                ;
+                return fetchUser;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
     AddUser(addNewUser) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const newUser = new UserSchema_1.default(addNewUser);
                 const savedUser = yield newUser.save();
-                return savedUser.toObject();
+                return savedUser;
             }
             catch (error) {
                 console.log(error);
@@ -47,8 +60,8 @@ class AdminRepository {
     updateUser(update) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const updatedUser = yield UserSchema_1.default.findByIdAndUpdate(update._id, update, { new: true });
-                return (updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.toObject()) || null;
+                const updatedUser = yield UserSchema_1.default.findOneAndUpdate({ _id: update._id }, update, { new: true });
+                return updatedUser;
             }
             catch (error) {
                 console.error(error);
@@ -112,10 +125,11 @@ class AdminRepository {
             }
         });
     }
-    deleteUserComment(threadId, userId) {
+    deleteUserComment(threadId, commentId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const deleteUserComment = yield ThreadSchema_1.default.findByIdAndUpdate(threadId, { $pull: { comments: userId } }, { new: true });
+                const deleteUserComment = yield ThreadSchema_1.default.findByIdAndUpdate(threadId, { $pull: { comments: commentId } }, { new: true });
+                const deletes = yield CommentSchema_1.default.findByIdAndDelete(commentId);
                 return deleteUserComment;
             }
             catch (error) {
@@ -127,6 +141,7 @@ class AdminRepository {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const deleteThread = yield ThreadSchema_1.default.findByIdAndDelete(threadId);
+                yield CommentSchema_1.default.deleteMany({ threadId: threadId });
                 return deleteThread;
             }
             catch (error) {
@@ -160,6 +175,7 @@ class AdminRepository {
     addNewsAndBlogs(NewsAndBlogs) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(1212);
                 const newNewsAndBlogs = new BlogSchema_1.default(NewsAndBlogs);
                 const savedNewsAndBlogs = yield newNewsAndBlogs.save();
                 return savedNewsAndBlogs;
@@ -269,6 +285,7 @@ class AdminRepository {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const fetchPalliative = yield UnitSchema_1.default.find();
+                console.log(fetchPalliative);
                 return fetchPalliative;
             }
             catch (error) {
@@ -279,9 +296,9 @@ class AdminRepository {
     addPalliative(unit) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newBlog = new BlogSchema_1.default(unit);
-                const savedBlog = yield newBlog.save();
-                return savedBlog;
+                const newUnit = new UnitSchema_1.default(unit);
+                const savedUnit = yield newUnit.save();
+                return savedUnit;
             }
             catch (error) {
                 console.log(error);
@@ -345,7 +362,7 @@ class AdminRepository {
             try {
                 const now = new Date();
                 const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-                const lastMonthUserRegistration = yield UnitSchema_1.default.find({
+                const lastMonthUserRegistration = yield UserSchema_1.default.find({
                     createdAt: { $gte: thirtyDaysAgo }
                 }).sort({ createdAt: -1 });
                 return lastMonthUserRegistration;
@@ -453,6 +470,7 @@ class AdminRepository {
                 const lastDayThread = yield ThreadSchema_1.default.find({
                     createdAt: { $gte: yesterday }
                 }).sort({ createdAt: -1 });
+                console.log(lastDayThread);
                 return lastDayThread;
             }
             catch (error) {

@@ -48,7 +48,7 @@ const userSchema = new mongoose_1.Schema({
     medicalRegistrationNumber: { type: String, required: true },
     affiliatedPalliativeAssociations: { type: String, default: "" },
     specialInterestsInPalliativeCare: { type: String, default: "" },
-    role: { type: String, enum: ["user"], default: "user", immutable: true },
+    role: { type: String, default: "user", immutable: true },
     password: { type: String, required: true },
     registrationStatus: {
         type: String,

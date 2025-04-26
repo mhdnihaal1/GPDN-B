@@ -47,6 +47,8 @@ const UserRoute_1 = __importDefault(require("../router/UserRoute"));
 const ThreadRoute_1 = __importDefault(require("../router/ThreadRoute"));
 const NewsAndBlogsRoute_1 = __importDefault(require("../router/NewsAndBlogsRoute"));
 const AdminRoute_1 = __importDefault(require("../router/AdminRoute"));
+const MembersAndPalliativeRoute_1 = __importDefault(require("../router/MembersAndPalliativeRoute"));
+const ResourceRoute_1 = __importDefault(require("../router/ResourceRoute"));
 dotenv.config();
 const app = (0, express_1.default)();
 exports.httpServer = (0, http_1.createServer)(app);
@@ -62,11 +64,16 @@ app.use((0, express_session_1.default)({
     resave: false,
     saveUninitialized: false,
 }));
+app.get("/hello", (req, res) => {
+    res.json({ message: "Server is runnings! 🟢" });
+});
 app.get("/server", (req, res) => {
-    res.status(200).json({ message: "Server is running! 🟢" });
+    res.json({ message: "Server is running! 🟢" });
 });
 app.use("/api/user", UserRoute_1.default);
 app.use("/api/thread", ThreadRoute_1.default);
 app.use("/api/blog", NewsAndBlogsRoute_1.default);
+app.use("/api/palliative", MembersAndPalliativeRoute_1.default);
+app.use("/api/resource", ResourceRoute_1.default);
 app.use("/api/admin", AdminRoute_1.default);
 exports.default = app;

@@ -20,7 +20,7 @@ class UserUsecase {
         this.AppWriteOtp = AppWriteOtp;
         this.sendEmail = sendEmail;
     }
-    registrationForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password, registrationStatus) {
+    registrationForm(fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, role, password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const ExistingUser = yield this.UserRepository.findByEmail(email);
@@ -53,12 +53,6 @@ class UserUsecase {
                         },
                     };
                 }
-                const validRole = "user";
-                const validStatus = registrationStatus === "pending" ||
-                    registrationStatus === "approved" ||
-                    registrationStatus === "rejected"
-                    ? registrationStatus
-                    : "pending";
                 const EncryptPass = yield this.EncryptPassword.encryptPassword(password);
                 const data = {
                     fullName,
@@ -74,9 +68,8 @@ class UserUsecase {
                     medicalRegistrationNumber,
                     affiliatedPalliativeAssociations,
                     specialInterestsInPalliativeCare,
-                    role: validRole,
+                    role,
                     password: EncryptPass,
-                    registrationStatus: validStatus,
                 };
                 const addNewUser = Object.assign({}, data);
                 const newUser = yield this.UserRepository.AddUser(addNewUser);
@@ -146,23 +139,6 @@ class UserUsecase {
     editUserForm(_id, fullName, email, phoneNumber, photo, bio, countryOfPractice, medicalQualification, yearOfGraduation, hasFormalTrainingInPalliativeCare, medicalRegistrationAuthority, medicalRegistrationNumber, affiliatedPalliativeAssociations, specialInterestsInPalliativeCare, password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(`
-        _id: ${_id}
-        fullName: ${fullName}
-        email: ${email}
-        phoneNumber: ${phoneNumber}
-        photo: ${photo}
-        bio: ${bio}
-        countryOfPractice: ${countryOfPractice}
-        medicalQualification: ${medicalQualification}
-        yearOfGraduation: ${yearOfGraduation}
-        hasFormalTrainingInPalliativeCare: ${hasFormalTrainingInPalliativeCare}
-        medicalRegistrationAuthority: ${medicalRegistrationAuthority}
-        medicalRegistrationNumber: ${medicalRegistrationNumber}
-        affiliatedPalliativeAssociations: ${affiliatedPalliativeAssociations}
-        specialInterestsInPalliativeCare: ${specialInterestsInPalliativeCare}
-        password: ${password}
-      `);
                 if (password) {
                     password = yield this.EncryptPassword.encryptPassword(password);
                 }

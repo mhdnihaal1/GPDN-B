@@ -42,8 +42,8 @@ const threadSchema = new mongoose_1.Schema({
     upVote: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "User" }],
     downVote: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "User" }],
     shares: { type: Number, default: 0 },
-    comments: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "User" }],
+    comments: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Comment" }],
     approvalStatus: { type: Boolean, default: false },
-});
+}, { timestamps: true });
 const Thread = mongoose_1.default.model("Thread", threadSchema);
 exports.default = Thread;

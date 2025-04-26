@@ -25,7 +25,7 @@ class MemberAndPalliativeUsecase {
     FetchDoctorsForm() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const FetchDoctor = this.MembersAndPalliativeRepository.FetchDoctors();
+                const FetchDoctor = yield this.MembersAndPalliativeRepository.FetchDoctors();
                 if (!FetchDoctor) {
                     return {
                         success: false,
@@ -51,7 +51,7 @@ class MemberAndPalliativeUsecase {
     SearchDoctorsForm(searchInp) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const searchDoctor = this.MembersAndPalliativeRepository.SearchDoctor(searchInp);
+                const searchDoctor = yield this.MembersAndPalliativeRepository.SearchDoctor(searchInp);
                 if (!searchDoctor) {
                     return {
                         success: false,
@@ -77,13 +77,13 @@ class MemberAndPalliativeUsecase {
     filterDoctorsForm(filter) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const filterDoctor = this.MembersAndPalliativeRepository.filterDoctors(filter);
+                const filterDoctor = yield this.MembersAndPalliativeRepository.filterDoctors(filter);
                 if (!filterDoctor) {
                     return {
                         success: false,
                         status: 400,
                         data: {
-                            message: "please try again"
+                            message: "Failed to filter doctor! ,please try again"
                         },
                     };
                 }
@@ -153,10 +153,10 @@ class MemberAndPalliativeUsecase {
             }
         });
     }
-    editPalliativeUnitForm(name, location, services, contactDetails) {
+    editPalliativeUnitForm(_id, name, location, services, contactDetails) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const PalliativeUnit = { name, location, services, contactDetails };
+                const PalliativeUnit = { _id, name, location, services, contactDetails };
                 const editPalliativeUnit = yield this.MembersAndPalliativeRepository.editPalliativeUnit(PalliativeUnit);
                 if (!editPalliativeUnit) {
                     return {

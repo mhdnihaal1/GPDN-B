@@ -13,6 +13,21 @@ class ThreadController {
     constructor(ThreadUsecase) {
         this.ThreadUsecase = ThreadUsecase;
     }
+    FetchThread(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const fetchThread = yield this.ThreadUsecase.FetchThreadForm();
+                return res.json({
+                    success: fetchThread === null || fetchThread === void 0 ? void 0 : fetchThread.success,
+                    status: fetchThread === null || fetchThread === void 0 ? void 0 : fetchThread.status,
+                    data: fetchThread === null || fetchThread === void 0 ? void 0 : fetchThread.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
     AddThread(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -32,8 +47,8 @@ class ThreadController {
     AddComment(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { userId, threadId, authorId, content } = req.body;
-                const addComment = yield this.ThreadUsecase.AddCommentForm(userId, threadId, authorId, content);
+                const { threadId, authorId, content } = req.body;
+                const addComment = yield this.ThreadUsecase.AddCommentForm(threadId, authorId, content);
                 return res.json({
                     success: addComment === null || addComment === void 0 ? void 0 : addComment.success,
                     status: addComment === null || addComment === void 0 ? void 0 : addComment.status,
@@ -128,8 +143,8 @@ class ThreadController {
     ThreadUpvote(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { threadId, likes } = req.body;
-                const likeThread = yield this.ThreadUsecase.ThreadUpvoteForm(threadId, likes);
+                const { threadId, userId } = req.body;
+                const likeThread = yield this.ThreadUsecase.ThreadUpvoteForm(threadId, userId);
                 return res.json({
                     success: likeThread === null || likeThread === void 0 ? void 0 : likeThread.success,
                     status: likeThread === null || likeThread === void 0 ? void 0 : likeThread.status,
@@ -157,6 +172,22 @@ class ThreadController {
             }
         });
     }
+    RealTimeReplies(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { commentId, userId, content } = req.body;
+                const commentReply = yield this.ThreadUsecase.CommentReplyForm(commentId, userId, content);
+                return res.json({
+                    success: commentReply === null || commentReply === void 0 ? void 0 : commentReply.success,
+                    status: commentReply === null || commentReply === void 0 ? void 0 : commentReply.status,
+                    data: commentReply === null || commentReply === void 0 ? void 0 : commentReply.data,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
     ThreadDownvote(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -176,8 +207,8 @@ class ThreadController {
     ThreadShares(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { threadId, shares } = req.body;
-                const shareThread = yield this.ThreadUsecase.ThreadSharesForm(threadId, shares);
+                const { threadId } = req.body;
+                const shareThread = yield this.ThreadUsecase.ThreadSharesForm(threadId);
                 return res.json({
                     success: shareThread === null || shareThread === void 0 ? void 0 : shareThread.success,
                     status: shareThread === null || shareThread === void 0 ? void 0 : shareThread.status,

@@ -42,7 +42,10 @@ class MembersAndPalliativeRepository {
     filterDoctors(filter) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const filterDoctors = yield UserSchema_1.default.find({ fullName: filter });
+                console.log(filter);
+                const filterDoctors = yield UserSchema_1.default.find({
+                    fullName: { $regex: filter, $options: "i" },
+                });
                 return filterDoctors;
             }
             catch (error) {

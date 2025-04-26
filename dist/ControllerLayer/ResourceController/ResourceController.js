@@ -47,8 +47,8 @@ class ResourceController {
     EditResource(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { title, description, fileURL, authorId, category } = req.body;
-                const editResources = yield this.ResourceUsecase.EditResourceForm(title, description, fileURL, authorId, category);
+                const { _id, title, description, fileURL, authorId, category } = req.body;
+                const editResources = yield this.ResourceUsecase.EditResourceForm(_id, title, description, fileURL, authorId, category);
                 return res.json({
                     success: editResources === null || editResources === void 0 ? void 0 : editResources.success,
                     status: editResources === null || editResources === void 0 ? void 0 : editResources.status,
