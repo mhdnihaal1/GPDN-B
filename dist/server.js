@@ -8,39 +8,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = handler;
 const socket_io_1 = require("socket.io");
-const http_1 = require("http");
-const app_1 = __importDefault(require("./InfrastructureLayer/config/app"));
-const connect_DBs_1 = require("./InfrastructureLayer/config/connect-DBs");
-// This will hold the socket instance globally (to prevent reinitializing)
+const connect_DBs_1 = require("./InfrastructureLayer/config/connect-DBs"); // adjust your path
 let io = null;
 function handler(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!io) {
-            const server = new http_1.Server(app_1.default);
-            io = new socket_io_1.Server(server, {
+        if (!res.socket.server.io) {
+            yield (0, connect_DBs_1.connectDB)();
+            const ioInstance = new socket_io_1.Server(res.socket.server, {
+                path: "/api/socket/io",
                 cors: {
                     origin: process.env.CORS_URL,
+                    methods: ["GET", "POST"],
                 },
             });
-            app_1.default.set("io", io);
-            yield (0, connect_DBs_1.connectDB)();
-            io.on("connection", (socket) => {
+            res.socket.server.io = ioInstance;
+            ioInstance.on("connection", (socket) => {
                 console.log("New user connected");
                 socket.on("message", (message) => {
-                    console.log(message);
-                    io === null || io === void 0 ? void 0 : io.emit("message", message);
+                    console.log("Received message:", message);
+                    ioInstance.emit("message", message);
                 });
                 socket.on("disconnect", () => {
                     console.log("User disconnected");
                 });
             });
         }
-        res.end("Socket server is ready");
+        res.end();
     });
 }

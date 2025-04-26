@@ -1,31 +1,28 @@
-import { Server as SocketIOServer } from "socket.io";
-import { Server as HttpServer } from "http";
-import app from "./InfrastructureLayer/config/app";
-import { connectDB } from "./InfrastructureLayer/config/connect-DBs";
+import { Server as ServerIO } from "socket.io";
+import { connectDB } from "./InfrastructureLayer/config/connect-DBs"; // adjust your path
 
-// This will hold the socket instance globally (to prevent reinitializing)
-let io: SocketIOServer | null = null;
+let io: ServerIO | null = null;
 
 export default async function handler(req: any, res: any) {
-  if (!io) {
-    const server = new HttpServer(app);
+  if (!res.socket.server.io) {
+    await connectDB();
 
-    io = new SocketIOServer(server, {
+    const ioInstance = new ServerIO(res.socket.server, {
+      path: "/api/socket/io",
       cors: {
         origin: process.env.CORS_URL,
+        methods: ["GET", "POST"],
       },
     });
 
-    app.set("io", io);
+    res.socket.server.io = ioInstance;
 
-    await connectDB();
-
-    io.on("connection", (socket) => {
+    ioInstance.on("connection", (socket) => {
       console.log("New user connected");
 
       socket.on("message", (message) => {
-        console.log(message);
-        io?.emit("message", message);
+        console.log("Received message:", message);
+        ioInstance.emit("message", message);
       });
 
       socket.on("disconnect", () => {
@@ -34,5 +31,5 @@ export default async function handler(req: any, res: any) {
     });
   }
 
-  res.end("Socket server is ready");
+  res.end();
 }
