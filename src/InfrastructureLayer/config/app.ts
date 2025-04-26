@@ -40,10 +40,7 @@ app.use(
     saveUninitialized: false,
   })
 );
-
-app.get("/hello", (req, res) => {
-  res.json({ message: "Server is runnings! 🟢" }); 
-});
+ 
 
 app.get("/server", (req, res) => {
   res.json({ message: "Server is running! 🟢" }); 
