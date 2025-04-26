@@ -64,9 +64,6 @@ app.use((0, express_session_1.default)({
     resave: false,
     saveUninitialized: false,
 }));
-app.get("/hello", (req, res) => {
-    res.json({ message: "Server is runnings! 🟢" });
-});
 app.get("/server", (req, res) => {
     res.json({ message: "Server is running! 🟢" });
 });
