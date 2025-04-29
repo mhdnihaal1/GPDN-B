@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-"scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-"dev": "ts-node-dev --respawn --transpile-only src/Index.ts",
-  "build": "tsc",
-  "start": "node dist/Index.js",
-  "lint": "eslint ./src --ext .ts"
-}
-,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --transpile-only src/Index.ts",
+    "build": "tsc",
+    "start": "node dist/Index.js",
+    "lint": "eslint ./src --ext .ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,7 +19,7 @@
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0", 
+    "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
     "@types/helmet": "^4.0.0",
     "@types/jest": "^29.5.14",
@@ -57,7 +56,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "firebase": "^11.6.0",
@@ -72,10 +71,9 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "socket.io": "^4.8.1",
+    "typescript": "^5.x.x",
     "uuid": "^11.1.0",
     "winston": "^3.17.0",
-    "zod": "^3.24.2",
-    "typescript": "^5.x.x"
-
+    "zod": "^3.24.2"
   }
 }
